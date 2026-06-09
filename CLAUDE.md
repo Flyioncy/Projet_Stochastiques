@@ -32,6 +32,23 @@ Chaque membre travaille sur sa branche personnelle et pousse sur `main` uniqueme
 - on merge vers `main` quand un résultat est validé, commenté et lisible ;
 - un pull request ou un merge direct sont tous les deux acceptables, à condition de ne pas casser ce qui tourne déjà sur `main`.
 
+### Fichiers de travail personnels et `CLAUDE.local.md`
+
+Pour explorer sans toucher aux livrables propres, chaque membre travaille dans des fichiers de brouillon sur sa propre branche :
+
+- `rapport_local.tex` et `notebook_local.ipynb` : copies de travail où l'on fait les essais. On y explore librement, puis on reporte le résultat validé dans `rapport.tex` / `notebook.ipynb`.
+- `CLAUDE.local.md` : carnet de bord **personnel**. Claude Code le charge automatiquement dans son contexte à chaque session, en plus de ce `CLAUDE.md` partagé. Chacun crée le sien pour y noter le contexte de l'exploration en cours ; il n'est pas destiné aux autres membres.
+
+Ces fichiers personnels peuvent être commités et poussés **sur la branche personnelle** (c'est utile comme sauvegarde), mais ils **ne doivent jamais arriver sur `main`**. Sur `main`, on ne fait remonter que les livrables propres (`rapport.tex`, `notebook.ipynb`, `figures/`, `CLAUDE.md`). Concrètement, plutôt que de merger toute la branche — ce qui emporterait les brouillons personnels — on reporte les résultats validés dans les fichiers propres puis on ne promeut que ceux-là, par exemple :
+
+```
+git checkout main
+git checkout <branche> -- rapport.tex notebook.ipynb figures/
+git commit
+```
+
+Ainsi chacun garde sur sa branche un Claude « au courant » de son exploration via son `CLAUDE.local.md`, sans que ces notes ni les brouillons ne polluent `main`.
+
 ---
 
 ## Répartition entre le notebook et le rapport
@@ -116,12 +133,15 @@ plt.show()
 
 ```
 Projet_Stochastiques/
-├── CLAUDE.md          # Ce fichier
+├── CLAUDE.md          # Ce fichier (partagé, sur main)
+├── CLAUDE.local.md    # Carnet de bord personnel (par branche, jamais sur main)
 ├── Projet.pdf         # Sujet officiel
 ├── virus4.csv         # Données premier modèle
 ├── virus6.csv         # Données deuxième modèle
-├── rapport.tex        # Source LaTeX du rapport
-├── notebook.ipynb     # Jupyter notebook principal
+├── rapport.tex        # Source LaTeX du rapport (livrable propre)
+├── rapport_local.tex  # Brouillon de travail (par branche, jamais sur main)
+├── notebook.ipynb     # Jupyter notebook principal (livrable propre)
+├── notebook_local.ipynb # Brouillon de travail (par branche, jamais sur main)
 └── figures/           # Figures générées par le notebook
 ```
 
