@@ -135,7 +135,7 @@ Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14
 
 \subsection*{Un modèle du cours pour $X_t$ ?}
 
-Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence dans notre cas. Le tableau~\ref{tab:modeles} les reprend, avec pour chacun la raison de le retenir ou de l'écarter.
+Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence. Le tableau~\ref{tab:modeles} indique, pour chaque modèle écarté, la raison de l'écarter. Les modèles que rien ne permet d'écarter restent simplement en lice.
 
 \begin{table}[ht]
   \centering
@@ -144,34 +144,34 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
     \hline
     Modèle & Caractéristiques & Retenu & Justification \\
     \hline
-    Brownien avec dérive & tendance linéaire & $\times$ & ne plafonne pas \\
-    Brownien géométrique  & reste de signe constant & $\times$ & $X_t$ devient négatif \\
+    Brownien avec dérive & tendance linéaire & $\checkmark$ &  \\
+    Brownien géométrique & reste de signe constant & $\times$ & $X_t$ devient négatif \\
     Pont brownien & épinglé aux deux bords & $\times$ & $X_t$ ne revient pas au départ \\
     Brownien intégral & trajectoire très lisse & $\times$ & différences trop bruitées \\
-    Ornstein-Uhlenbeck & retour à la moyenne & $\checkmark$ & relaxation vers un niveau négatif \\
+    Ornstein-Uhlenbeck & retour à la moyenne & $\checkmark$ &  \\
     Verhulst (logistique) & saturation, population positive & $\times$ & virus négatif mal décrit \\
     \hline
   \end{tabular}%
   }
-  \caption{Modèles vus en cours et leur pertinence pour $(X_t)$, dans l'ordre chronologique du cours.}
+  \caption{Modèles vus en cours et leur pertinence pour $(X_t)$. On ne justifie que les rejets ; les modèles retenus sont simplement ceux que rien ne permet d'écarter à ce stade.}
   \label{tab:modeles}
 \end{table}
 
-Le seul candidat que nous retenons est l'Ornstein-Uhlenbeck, dans sa version transitoire puisque le virus part de $0$ et semble encore relaxer vers son niveau d'équilibre négatif. Sa version stationnaire est moins crédible ici. Au vu du test précédent et de l'unique trajectoire de $2000$ points dont nous disposons, nous le voyons toutefois comme une piste à confirmer plutôt que comme une certitude.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Il reste à les mettre à l'épreuve.
 
-\subsection*{Test de l'hypothèse Ornstein-Uhlenbeck}
+\subsection*{Validation par simulation du système couplé}
 
-Pour mettre l'Ornstein-Uhlenbeck à l'épreuve, nous avons estimé ses paramètres puis comparé le virus reconstruit à ce que le modèle prédit. L'équation discrétisée $\Delta X_i \approx \theta(\mu - X_i)\,dt + \sigma\sqrt{dt}\,\varepsilon_i$ se lit comme une régression de $\Delta X_i$ sur $X_i$, dont la pente donne $\theta$, l'ordonnée à l'origine donne $\mu$ et l'écart-type des résidus donne $\sigma$. On obtient $\theta \approx 0{,}07$, $\mu \approx -0{,}66$ et $\sigma \approx 0{,}05$.
-
-Avec ces paramètres, un Ornstein-Uhlenbeck parti de $X_0 = 0$ a pour moyenne $\mu(1 - e^{-\theta t})$, une relaxation lente vers le niveau négatif $\mu$. La figure~\ref{fig:ou} compare le virus reconstruit à cette moyenne et à quelques trajectoires simulées du modèle. Le virus reconstruit suit la relaxation prévue et reste dans le faisceau des simulations.
+Pour valider un modèle de $X_t$, nous simulons une trajectoire du modèle, nous l'injectons dans le système~\eqref{eq:systeme} pour en déduire $(V,P)$, puis nous comparons ces $(V,P)$ aux données par un test de Kolmogorov-Smirnov à deux échantillons. L'Ornstein-Uhlenbeck est estimé par la régression des différences sur le niveau ($\theta\approx0{,}07$, $\mu\approx-0{,}66$, $\sigma\approx0{,}05$) et le brownien avec dérive par la moyenne et l'écart-type des différences ($\nu\approx-0{,}02$, $\sigma\approx0{,}05$).
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{virus4_ou_test.png}
-  \caption{Virus reconstruit $X_t$ comparé à la moyenne d'un Ornstein-Uhlenbeck $\mu(1-e^{-\theta t})$ (tirets) et à des trajectoires simulées du modèle (gris).}
-  \label{fig:ou}
+  \includegraphics[width=\textwidth]{virus4_vp_validation.png}
+  \caption{Données observées (en couleur) et trajectoires $(V,P)$ simulées (en gris) à partir de chaque modèle de $X_t$, l'Ornstein-Uhlenbeck à gauche et le brownien avec dérive à droite.}
+  \label{fig:val}
 \end{figure}
 
-À priori, l'Ornstein-Uhlenbeck reproduit l'allure observée. Il reste une approximation puisque les différences ne sont pas gaussiennes, et une seule trajectoire ne suffit pas à l'affirmer.
+L'écart est net sur la figure~\ref{fig:val}. Les prédateurs observés s'effondrent puis restent bas alors que les trajectoires simulées rebondissent et oscillent largement. Le test confirme ce constat avec des p-values de l'ordre de $10^{-50}$ pour les deux modèles, sur $V$ comme sur $P$.
+
+À priori, ni l'Ornstein-Uhlenbeck ni le brownien avec dérive ne sont donc retenus. Un bruit gaussien stationnaire, qu'il revienne à la moyenne ou non, ne reproduit pas l'effondrement observé, ce qui rejoint le fait que les différences ne sont pas gaussiennes. Le modèle du virus reste donc à trouver.
 
 \end{document}
