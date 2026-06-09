@@ -121,8 +121,6 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
 
 La moyenne observée semble cohérente avec notre prédiction précédente. En revanche, le graphe des différences ne nous apprend pas grand-chose à lui seul.
 
-\subsection*{Loi des différences}
-
 Dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
 
 \begin{figure}[ht]
@@ -132,7 +130,7 @@ Dans les processus stochastiques, les différences jouent un rôle central, et u
   \label{fig:hist}
 \end{figure}
 
-Un test de Kolmogorov-Smirnov, dont seule la p-value nous intéresse comme en cours et en TP, donne ici une valeur de l'ordre de $6\cdot10^{-14}$. Il est dès lors vraisemblablement plausible de ne pas retenir l'hypothèse de normalité des différences. Un seul test ne suffit cependant pas à trancher, surtout sur un jeu de données unique et restreint, et nous formulons donc cette conclusion avec prudence.
+Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.
 
 \subsection*{Un modèle du cours pour $X_t$ ?}
 
