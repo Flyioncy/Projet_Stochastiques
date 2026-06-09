@@ -156,7 +156,7 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit. Nous testons directement $X_t$ car un modèle qui le reproduit reproduira aussi les populations.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit.
 
 \subsection*{Test du brownien avec dérive}
 
@@ -170,8 +170,8 @@ On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien (
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{virus4_sim_derive.png}
-  \caption{Trois trajectoires simulées du brownien avec dérive (en gris) et le virus reconstruit (en violet).}
+  \includegraphics[width=0.6\textwidth]{virus4_sim_derive.png}
+  \caption{Trois trajectoires simulées du brownien avec dérive (en gris) et le virus reconstruit.}
   \label{fig:sim-derive}
 \end{figure}
 
@@ -209,8 +209,8 @@ où l'intégrale d'Itô est approchée par une somme sur les incréments du brow
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{virus4_sim_ou.png}
-  \caption{Trois trajectoires simulées de l'Ornstein-Uhlenbeck (en gris) et le virus reconstruit (en violet).}
+  \includegraphics[width=0.6\textwidth]{virus4_sim_ou.png}
+  \caption{Trois trajectoires simulées de l'Ornstein-Uhlenbeck (en gris) et le virus reconstruit.}
   \label{fig:sim-ou}
 \end{figure}
 
