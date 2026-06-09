@@ -9,18 +9,31 @@
 
 ## Idée 1 — Reconstruire $X_t$ à partir des données (modèle `virus4.csv`)
 
-### Le geste de départ : isoler $X_t$ comme on a isolé $dt$
+### Ce qu'on attend : passer à l'espérance
 
-Pour récupérer $dt$, on avait utilisé l'équation **propre** (sans bruit) des prédateurs.
-Ici on fait le geste inverse, sur l'équation des proies, qui est justement celle qui
-porte le virus :
+Avant de reconstruire quoi que ce soit, regardons l'équilibre du système. Sans virus, les
+points fixes sont
+
+$$\dot P = 0 \Rightarrow V^* = 1, \qquad \dot V = 0 \Rightarrow P^* = \tfrac{1}{2},$$
+
+et le système classique tourne autour de $(1, \tfrac12)$. Si l'on suppose que $X_t$ admet
+une moyenne finie $\mu = \mathbb{E}[X]$ (plausible, à vérifier), on passe l'équation des
+proies à sa moyenne et la nullcline se décale :
+
+$$\tfrac{2}{3} - \tfrac{4}{3}P + \mu = 0 \;\Longrightarrow\; P^* = \tfrac{1}{2} + \tfrac{3}{4}\mu.$$
+
+Comme les données montrent des prédateurs qui s'effondrent bien en dessous de $\tfrac12$, on
+s'attend à **$\mu < 0$**. C'est cette prédiction qu'on va vérifier en reconstruisant $X_t$.
+
+### Reconstruire $X_t$ par discrétisation
+
+On part de l'équation des proies, qui porte le virus :
 
 $$dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt.$$
 
-L'équation de $V$ ne dépend pas de $B_t$ (aucun terme $dB_t$), donc inutile de sortir
-l'artillerie d'Itô. On **discrétise directement** entre $t_{i-1}$ et $t_i = t_{i-1}+dt$,
-à la manière du cours 4 : on remplace $dV_t$ par l'incrément $V_i - V_{i-1}$ et on évalue
-le membre de droite au début du pas.
+On discrétise directement entre $t_{i-1}$ et $t_i = t_{i-1}+dt$, à la manière du cours 4 :
+on remplace $dV_t$ par l'incrément $V_i - V_{i-1}$ et on évalue le membre de droite au début
+du pas.
 
 $$V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.$$
 
@@ -28,24 +41,10 @@ Il ne reste qu'à isoler $X_{i-1}$, et tout le membre de droite est observé :
 
 $$\boxed{\,X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}\,}$$
 
-On reconstruit ainsi toute la trajectoire empirique de $X$. Même esprit « à la
-physicienne » que pour $dt$ : on inverse le schéma discrétisé pour isoler l'inconnue. La
-différence, c'est qu'ici on obtient une série temporelle (une réalisation du processus)
-et non une constante.
-
-### Ce qu'on attend (argument d'équilibre)
-
-Sans virus, les points fixes sont :
-
-$$\dot P = 0 \Rightarrow V^* = 1, \qquad \dot V = 0 \Rightarrow P^* = \tfrac{1}{2},$$
-
-et le système classique tourne autour de $(1, \tfrac12)$. Si $X_t$ a une moyenne
-$\mu = \mathbb{E}[X]$, la nullcline des proies se décale :
-
-$$\tfrac{2}{3} - \tfrac{4}{3}P + \mu = 0 \;\Longrightarrow\; P^* = \tfrac{1}{2} + \tfrac{3}{4}\mu.$$
-
-Donc un $X_t$ de **moyenne négative** abaisse l'équilibre des prédateurs, ce qui colle
-avec leur effondrement observé. **Prédiction à vérifier : $\mu < 0$.**
+On reconstruit ainsi toute la trajectoire empirique de $X$, sans hypothèse de modèle. Même
+esprit « à la physicienne » que pour $dt$ : on inverse le schéma discrétisé pour isoler
+l'inconnue. Ici on obtient une série temporelle (une réalisation du processus) et non une
+constante.
 
 ### Première manip proposée
 
