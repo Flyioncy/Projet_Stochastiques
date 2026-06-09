@@ -95,6 +95,10 @@ Sur le ton et la ponctuation :
 - On **évite d'empiler les virgules**. Les conjonctions de subordination (`puisque`, `tandis que`, `alors que`, `lorsque`, `parce que`, `si bien que`…) rendent souvent mieux le lien logique. Cela dit, on garde des phrases qui ne sont pas trop longues.
 - En particulier, **on ne met pas de virgule devant une conjonction de subordination** placée en milieu de phrase ; la subordonnée s'enchaîne directement (« … aucun bruit puisque l'on a… » plutôt que « …, puisque… »). La virgule ne se justifie que lorsque la subordonnée est placée en tête de phrase.
 - La mise en page est **légèrement aérée** : interligne un peu augmenté et espacement entre les paragraphes (`\linespread{1.05}` et `\setlength{\parskip}{0.6em}` dans le préambule), avec quelques sauts de ligne pour détacher les équations du texte.
+- On parle de **test** d'un modèle (par le test de Kolmogorov-Smirnov) plutôt que de « validation ».
+- Quand on met plusieurs modèles à l'épreuve, on consacre **une sous-section à chacun**, sans les mélanger.
+- On **sépare nettement la démarche et le résultat** : après avoir décrit la méthode, on saute une ligne et on met les valeurs obtenues en avant, par exemple dans un `\begin{center}`.
+- On ne justifie rien par « comme en cours » ou « à la manière du cours », le correcteur connaît déjà le contenu du cours.
 
 ---
 
@@ -108,7 +112,7 @@ On approche les différentielles par leurs incréments sur un pas $dt$ (noté au
 
 $$dX_t \;\rightsquigarrow\; X_i - X_{i-1}, \qquad dt \;\rightsquigarrow\; dt, \qquad dB_t \;\rightsquigarrow\; B_i - B_{i-1} \sim \mathcal{N}(0, dt),$$
 
-et on évalue le membre de droite au début du pas. Exemple du cours sur $dP_t = \mu\,dt + \sigma\,dB_t$ : on écrit $\frac{P_{i}-P_{i-1}}{P_{i-1}} = \mu\,dt + \sigma\,(B_i - B_{i-1})$. Cette même discrétisation sert dans les deux sens : pour **simuler** une EDS (schéma d'Euler / Euler-Maruyama), et pour **estimer** une quantité inconnue en inversant le schéma à partir des données (c'est ainsi qu'on récupère $dt$, puis qu'on reconstruit $X_t$).
+- EDS générale : on l'intègre via son écriture intégrale, le terme stochastique étant une **intégrale d'Itô** $\int b(X_s)\,dB_s$ approchée par une somme sur les incréments, $\sum_i b(X_i)\,dB_i$. Pour l'Ornstein-Uhlenbeck on dispose de la solution exacte $X_t = \mu + (X_0-\mu)e^{-\theta t} + \sigma e^{-\theta t}\int_0^t e^{\theta s}\,dB_s$, où l'intégrale d'Itô est elle aussi approchée par une somme.
 
 ### Calcul différentiel d'Itô (cours 6 et 7)
 
@@ -133,7 +137,7 @@ et on remplace $(dX_t)^2$ à l'aide des règles ci-dessus. Exemple du cours : $d
 On simule d'abord un **mouvement brownien standard** comme la somme cumulée d'incréments gaussiens indépendants de variance $dt$ : `B = np.cumsum(scs.norm(scale=np.sqrt(dt)).rvs(size=n))` (cf. TD3). On construit ensuite le processus voulu à partir de ce brownien ou de ses incréments $dB_i = B_{i+1}-B_i$ :
 
 - brownien avec dérive : $X_t = X_0 + \nu t + \sigma B_t$ ;
-- EDS générale $dX = a(X)\,dt + b(X)\,dB$ : schéma d'Euler-Maruyama $X_{i+1} = X_i + a(X_i)\,dt + b(X_i)\,dB_i$.
+- EDS générale : on l'intègre via son écriture intégrale, le terme stochastique étant une **intégrale d'Itô** $\int b(X_s)\,dB_s$ approchée par une somme sur les incréments, $\sum_i b(X_i)\,dB_i$. Pour l'Ornstein-Uhlenbeck on dispose de la solution exacte $X_t = \mu + (X_0-\mu)e^{-\theta t} + \sigma e^{-\theta t}\int_0^t e^{\theta s}\,dB_s$, où l'intégrale d'Itô est elle aussi approchée par une somme.
 
 On ne réinvente pas un schéma maison ; on part toujours du brownien, comme dans les TD.
 
