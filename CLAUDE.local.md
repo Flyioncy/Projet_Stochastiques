@@ -7,6 +7,10 @@ sur `main`** — comme `rapport_local.tex` et `notebook_local.ipynb`.
 
 ## Convention de travail
 
+- `discussion_local.md` sert de **tableau blanc** entre Philippe et moi. À chaque fois
+  que je dois lui expliquer une idée ou un raisonnement, je l'écris dans ce fichier
+  (proprement, avec les formules) plutôt que seulement dans le chat. Je le tiens à jour
+  au fil de la réflexion, et je mets aussi ce `CLAUDE.local.md` à jour en conséquence.
 - On explore dans `notebook_local.ipynb` et `rapport_local.tex` (suivis sur la branche, jamais sur `main`).
 - Les figures d'exploration vont dans `figures_local/` (ignoré), pour ne pas écraser
   les figures « propres » de `figures/`.
@@ -14,6 +18,8 @@ sur `main`** — comme `rapport_local.tex` et `notebook_local.ipynb`.
   (les livrables propres), et on ne pousse sur `main` que sur décision explicite.
 
 ## Question 1 — modélisation de $(X_t)$ (modèle `virus4.csv`)
+
+> Raisonnement détaillé et à jour dans `discussion_local.md` (Idée 1). Résumé ci-dessous.
 
 Système :
 $$dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt, \qquad dP_t = P_t(-1 + V_t)\,dt.$$
