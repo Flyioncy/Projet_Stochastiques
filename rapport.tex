@@ -1,0 +1,122 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=black}
+
+\graphicspath{{figures/}}
+
+\title{Projet Méthodes Stochastiques\\[0.3em]
+       \large Modèle proie-prédateur avec virus}
+\author{Philippe \textsc{Lin}}
+\date{Juin 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Ce rapport est un journal de bord : il documente la démarche suivie pour modéliser
+un système proie-prédateur de type Lotka-Volterra dans lequel les proies sont
+affectées par un virus décrit par un processus stochastique $(X_t)$. Les codes et
+les simulations qui produisent les figures se trouvent dans le notebook
+\texttt{notebook.ipynb} qui accompagne ce document ; on ne reproduit ici que les
+résultats et leur interprétation.
+\end{abstract}
+
+\section{Contexte et modèle}
+
+On étudie la dynamique de deux populations en interaction : les victimes (les proies),
+de densité $V_t$, et les prédateurs, de densité $P_t$. Le point de départ est le
+modèle de Lotka-Volterra, dans lequel les proies se reproduisent seules mais sont
+mangées par les prédateurs, tandis que les prédateurs meurent naturellement mais
+profitent de l'abondance des proies pour se reproduire.
+
+Dans ce premier modèle, les proies sont en plus frappées par un virus, modélisé par
+un processus stochastique $(X_t)_{t\in[0,\tau]}$. Le système s'écrit alors
+\begin{equation}\label{eq:systeme}
+  dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt,
+  \qquad
+  dP_t = P_t\left(-1 + V_t\right)dt.
+\end{equation}
+On dispose d'une observation de ce système dans le fichier \texttt{virus4.csv} : la
+première colonne donne l'évolution discrétisée de $V_t$, la seconde celle de $P_t$.
+
+\section{Question 1 — Proposer et valider un modèle pour le virus}
+
+L'objectif de cette première question est de proposer un modèle pour le processus
+$(X_t)$ et de le valider à l'aide des données de \texttt{virus4.csv}. Avant toute
+modélisation, il est naturel de commencer par regarder les données : à quoi
+ressemblent les deux populations au cours du temps, et en quoi se distinguent-elles
+du modèle de Lotka-Volterra classique, celui que l'on obtiendrait sans le terme de
+virus $X_t$. Cette comparaison nous donne une première intuition sur ce que le virus
+fait réellement au système.
+
+\subsection{Récupération du pas de temps}
+
+Le fichier contient $2000$ points, mais on ne connaît pas a priori le pas de temps de
+la discrétisation. On peut le retrouver en exploitant le fait que l'équation des
+prédateurs ne contient pas de bruit : on a exactement $dP_t = P_t(-1 + V_t)\,dt$. En
+discrétisant, le pas de temps vérifie
+\begin{equation}\label{eq:dt}
+  dt \approx \frac{P_{i+1} - P_i}{P_i\,(-1 + V_i)}.
+\end{equation}
+En moyennant sur tous les points (en écartant ceux où $V_i$ est trop proche de $1$,
+qui annulent le dénominateur), on récupère le pas de temps. On trouve
+$dt \approx 0{,}015$, et donc une durée d'observation
+$\tau = 2000 \times 0{,}015 = 30$. On peut alors construire l'axe des temps et tracer
+les deux populations (figure~\ref{fig:series}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{virus4_series.png}
+  \caption{Évolution observée des densités de victimes $V_t$ et de prédateurs $P_t$
+           sur l'intervalle $[0,\tau]$, reconstruite à partir de \texttt{virus4.csv}.}
+  \label{fig:series}
+\end{figure}
+
+\subsection{Comparaison avec le modèle de Lotka-Volterra classique}
+
+Pour mesurer l'effet du virus, on intègre le modèle déterministe classique,
+c'est-à-dire le même système mais sans le terme $X_t$ :
+\begin{equation}\label{eq:classique}
+  \frac{dV_t}{dt} = V_t\,(a - b\,P_t),
+  \qquad
+  \frac{dP_t}{dt} = P_t\,(-c + d\,V_t),
+\end{equation}
+avec les coefficients $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. On
+part des mêmes conditions initiales que les données ($V_0 = 1$, $P_0 = 0{,}4$) et on
+intègre par un schéma d'Euler explicite sur la même grille de temps. La
+figure~\ref{fig:comparaison} superpose les deux trajectoires.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{virus4_comparaison.png}
+  \caption{Comparaison entre les données observées (trait plein) et le modèle de
+           Lotka-Volterra classique sans $X_t$ (tirets), pour les victimes (gauche)
+           et les prédateurs (droite).}
+  \label{fig:comparaison}
+\end{figure}
+
+\subsection{Premières observations}
+
+La comparaison est parlante. Le modèle classique produit des oscillations régulières
+et entretenues : les deux populations tournent indéfiniment autour de leur point
+d'équilibre, et le portrait de phase est une courbe fermée bien nette. Les données
+observées partent dans la même direction au tout début, mais s'en écartent
+franchement ensuite. La population de prédateurs, en particulier, ne ré-oscille pas :
+elle s'effondre progressivement et reste très basse, là où le modèle classique la
+voit remonter à chaque cycle.
+
+Autrement dit, le terme de virus $X_t$ ne se contente pas d'ajouter un petit bruit
+autour de la trajectoire classique : il modifie la dynamique d'ensemble et casse la
+périodicité. C'est sur ce comportement que va s'appuyer la modélisation de $(X_t)$
+dans la suite.
+
+\end{document}

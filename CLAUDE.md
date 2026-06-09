@@ -34,6 +34,18 @@ Chaque membre travaille sur sa branche personnelle et pousse sur `main` uniqueme
 
 ---
 
+## Répartition entre le notebook et le rapport
+
+Les deux livrables ont des rôles **distincts et complémentaires** ; il ne faut pas dupliquer le contenu de l'un dans l'autre.
+
+- **Le notebook (`notebook.ipynb`) est le moteur de calcul.** Il contient le code qui charge les données, estime les paramètres, lance les simulations et **régénère les figures**. Le texte y est réduit au strict minimum : un titre de section court par étape, et éventuellement une phrase de transition pour savoir ce que fait le bloc de code qui suit. Pas de paragraphes d'explication, pas de discussion des résultats, pas de contexte mathématique développé — tout cela va dans le rapport. Quelqu'un qui lit le notebook doit comprendre **ce que fait le code et comment relancer les simulations**, pas la démarche scientifique.
+
+- **Le rapport (`rapport.tex` → `rapport.pdf`) porte tout le contexte et la démarche.** C'est là que l'on explique le problème, que l'on motive chaque choix de modélisation, que l'on présente et commente les figures (extraites du notebook), et que l'on déroule les justifications mathématiques. C'est le document qui se lit seul.
+
+En résumé : si une phrase explique *pourquoi* on fait quelque chose ou *ce que cela signifie*, elle va dans le rapport. Si elle décrit *comment* le code procède, elle peut rester en commentaire dans le notebook.
+
+---
+
 ## Philosophie du rapport
 
 Le rapport est un **journal de bord scientifique**, pas une démonstration de résultats parfaits. Ce qui compte pour la note, c'est la démarche, l'honnêteté et l'originalité. Il faut donc documenter aussi bien les pistes qui ont abouti que celles qui ont échoué, en expliquant pourquoi on les a essayées et ce qu'on en a conclu.
@@ -105,5 +117,5 @@ Projet_Stochastiques/
 
 ## Résumé des livrables
 
-- `rapport.pdf` (généré depuis `rapport.tex`) : journal de bord rédigé, avec figures et justifications mathématiques.
-- `notebook.ipynb` : codes propres, commentés, reproductibles — les figures du rapport en sont extraites.
+- `rapport.pdf` (généré depuis `rapport.tex`) : journal de bord rédigé, qui porte le contexte, la démarche, les figures commentées et les justifications mathématiques. C'est le document qui se lit seul.
+- `notebook.ipynb` : code propre, commenté, reproductible et **peu bavard** — il charge les données, lance les simulations et régénère les figures du rapport, sans dupliquer les explications de fond.
