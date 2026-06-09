@@ -17,42 +17,21 @@ porte le virus :
 
 $$dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt.$$
 
-Plutôt que d'invoquer directement $d\ln V = dV/V$, on calcule $d(\ln V_t)$ **à la main**,
-à la manière du calcul différentiel d'Itô des cours 6 et 7 (cf. le calcul de
-$d(\sin B_t)$). On écrit l'incrément de deux façons :
+L'équation de $V$ ne dépend pas de $B_t$ (aucun terme $dB_t$), donc inutile de sortir
+l'artillerie d'Itô. On **discrétise directement** entre $t_{i-1}$ et $t_i = t_{i-1}+dt$,
+à la manière du cours 4 : on remplace $dV_t$ par l'incrément $V_i - V_{i-1}$ et on évalue
+le membre de droite au début du pas.
 
-$$\ln V_{t+dt} \simeq \ln V_t + d(\ln V_t)
-\qquad\text{et}\qquad
-\ln V_{t+dt} = \ln(V_t + dV_t).$$
+$$V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.$$
 
-On développe la seconde par un DL de $\ln$ à l'ordre 2 — c'est là que naîtrait la
-correction d'Itô dans le cas général :
+Il ne reste qu'à isoler $X_{i-1}$, et tout le membre de droite est observé :
 
-$$\ln(V_t + dV_t) = \ln V_t + \frac{dV_t}{V_t} - \frac{1}{2}\frac{(dV_t)^2}{V_t^2} + o\big((dV_t)^2\big).$$
+$$\boxed{\,X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}\,}$$
 
-Or l'équation de $V$ n'a **pas** de terme brownien : $dV_t = V_t(\dots)\,dt$ est une dérive
-pure. Avec la règle $(dt)^2 \simeq 0$,
-
-$$(dV_t)^2 = V_t^2\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)^2 (dt)^2 \simeq 0,$$
-
-donc le terme du second ordre disparaît et il reste
-
-$$\boxed{\,d(\ln V_t) = \frac{dV_t}{V_t} = \left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt\,}$$
-
-Le point intéressant : comme $V$ est à variation finie (pas de $dB$), la règle de la
-chaîne ordinaire s'applique et il n'y a aucune correction d'Itô — mais on l'a *justifié*
-par le DL plutôt que postulé. (À comparer avec $d(\sin B_t) = \cos B_t\,dB_t - \tfrac12 \sin B_t\,dt$
-du cours, où le terme $(dB_t)^2 \simeq dt$ survit, lui.)
-
-On isole alors $X_t$, et tout le membre de droite est observé :
-
-$$X_t = \frac{d\ln V_t}{dt} - \tfrac{2}{3} + \tfrac{4}{3}P_t
-\qquad\Longrightarrow\qquad
-X_i \approx \frac{\ln V_{i+1} - \ln V_i}{dt} - \tfrac{2}{3} + \tfrac{4}{3}P_i.$$
-
-Même esprit « à la physicienne » que pour $dt$ : on inverse l'équation pour isoler
-l'inconnue. Ici on obtient toute une série temporelle, une réalisation du processus, et
-non une constante.
+On reconstruit ainsi toute la trajectoire empirique de $X$. Même esprit « à la
+physicienne » que pour $dt$ : on inverse le schéma discrétisé pour isoler l'inconnue. La
+différence, c'est qu'ici on obtient une série temporelle (une réalisation du processus)
+et non une constante.
 
 ### Ce qu'on attend (argument d'équilibre)
 

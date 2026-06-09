@@ -16,9 +16,10 @@ sur `main`** — comme `rapport_local.tex` et `notebook_local.ipynb`.
   les figures « propres » de `figures/`.
 - Quand un résultat est **validé**, je le reporte dans `notebook.ipynb` / `rapport.tex`
   (les livrables propres), et on ne pousse sur `main` que sur décision explicite.
-- Pour les calculs de différentielles, on suit le calcul différentiel d'Itô des cours 6
-  et 7 (DL + règles $(dt)^2\simeq0$, $dt\,dB_t\simeq0$, $(dB_t)^2\simeq dt$). Les points
-  de méthode sont reportés dans le `CLAUDE.md` partagé.
+- Méthode par défaut pour passer au numérique ou estimer depuis les données :
+  **discrétisation directe** (cours 4), $dX_t \rightsquigarrow X_i - X_{i-1}$. On ne sort
+  le calcul différentiel d'Itô (cours 6/7) que s'il y a un terme brownien. Méthodes
+  reportées dans le `CLAUDE.md` partagé.
 
 ## Question 1 — modélisation de $(X_t)$ (modèle `virus4.csv`)
 
@@ -29,11 +30,12 @@ $$dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt, \qquad dP_t = P
 
 Point de départ retenu : **reconstruire la trajectoire empirique de $X_t$** en inversant
 l'équation des proies (même esprit que la récupération de $dt$ via l'équation des
-prédateurs). On calcule $d(\ln V_t)$ à la main (DL de $\ln$, cours 6/7) ; comme $V$ n'a
-pas de partie brownienne, le terme du second ordre disparaît et $d\ln V_t = dV_t/V_t$
-sans correction d'Itô. D'où
-$$X_t = \frac{d\ln V_t}{dt} - \tfrac23 + \tfrac43 P_t,$$
-estimable par différences finies à partir des données seules, sans hypothèse de modèle.
+prédateurs). L'équation de $V$ n'a pas de terme brownien, donc on discrétise directement
+(cours 4) sans passer par Itô :
+$$V_i - V_{i-1} \approx V_{i-1}\left(\tfrac23 - \tfrac43 P_{i-1} + X_{i-1}\right)dt
+\;\Longrightarrow\;
+X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac23 + \tfrac43 P_{i-1}.$$
+Estimable à partir des données seules, sans hypothèse de modèle.
 
 Pistes de modèle à départager une fois $X_t$ tracé :
 - mouvement brownien avec dérive $dX = \mu\,dt + \sigma\,dB$ (X qui erre, variance ∝ t) ;
