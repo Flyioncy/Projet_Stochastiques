@@ -102,6 +102,8 @@ Sur le ton et la ponctuation :
 - On n'énonce pas un résultat mathématique sans le justifier. S'il n'est pas dans le cours, on le redémontre proprement, le plus souvent via le calcul d'Itô.
 - La conclusion d'un test est séparée du calcul. On donne d'abord la p-value, puis à part le verdict (modèle retenu ou non).
 - La phrase de conclusion d'un test (hypothèse retenue ou non) est mise en gras avec `\textbf{...}`, pour la détacher du calcul.
+- Un test peut s'accompagner d'une figure de quelques trajectoires simulées en regard des données, placée après la méthode et avant la p-value. C'est un pur support visuel, sans interprétation, car un processus stochastique ne se lit pas à l'œil.
+- La p-value s'énonce en une seule phrase, avec son ordre de grandeur et le constat « largement inférieure à 0,05 » (ou non), sans phrase de remplissage.
 - On ne juge pas un modèle sur sa seule moyenne. Ce qu'on cherche à capturer, c'est la loi du processus (le bruit), donc on teste la distribution.
 
 ---

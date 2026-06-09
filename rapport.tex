@@ -90,13 +90,13 @@ Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pa
 
 \subsection*{Reconstruction du virus $X_t$}
 
-Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $\mu = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + \mu = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
+Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $m = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + m = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
 
 \begin{equation}\label{eq:equilibre}
-  P^* = \frac{1}{2} + \frac{3}{4}\mu.
+  P^* = \frac{1}{2} + \frac{3}{4}m.
 \end{equation}
 
-Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $\mu$ négative.
+Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $m$ négative.
 
 Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
@@ -130,12 +130,11 @@ La moyenne observée semble cohérente avec notre prédiction précédente. En r
 
 Toutefois, dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
 
-
-Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.
+Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$, largement inférieure à $0{,}05$. \textbf{À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.}
 
 \subsection*{Un modèle du cours pour $X_t$ ?}
 
-Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence dans notre cas. Le tableau~\ref{tab:modeles} les reprend, avec pour chacun la raison de le retenir ou de l'écarter.
+Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence. Le tableau~\ref{tab:modeles} indique, pour chaque modèle écarté, la raison de l'écarter. Les modèles que rien ne permet d'écarter restent simplement en lice.
 
 \begin{table}[ht]
   \centering
@@ -144,19 +143,83 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
     \hline
     Modèle & Caractéristiques & Retenu & Justification \\
     \hline
-    Brownien avec dérive & tendance linéaire & $\times$ & ne plafonne pas \\
-    Brownien géométrique  & reste de signe constant & $\times$ & $X_t$ devient négatif \\
+    Brownien avec dérive & tendance linéaire & $\checkmark$ &  \\
+    Brownien géométrique & reste de signe constant & $\times$ & $X_t$ devient négatif \\
     Pont brownien & épinglé aux deux bords & $\times$ & $X_t$ ne revient pas au départ \\
     Brownien intégral & trajectoire très lisse & $\times$ & différences trop bruitées \\
-    Ornstein-Uhlenbeck & retour à la moyenne & $\checkmark$ & relaxation vers un niveau négatif \\
+    Ornstein-Uhlenbeck & retour à la moyenne & $\checkmark$ &  \\
     Verhulst (logistique) & saturation, population positive & $\times$ & virus négatif mal décrit \\
     \hline
   \end{tabular}%
   }
-  \caption{Modèles vus en cours et leur pertinence pour $(X_t)$, dans l'ordre chronologique du cours.}
+  \caption{Modèles vus en cours et leur pertinence pour $(X_t)$. On ne justifie que les rejets ; les modèles retenus sont simplement ceux que rien ne permet d'écarter à ce stade.}
   \label{tab:modeles}
 \end{table}
 
-Le seul candidat que nous retenons est l'Ornstein-Uhlenbeck, dans sa version transitoire puisque le virus part de $0$ et semble encore relaxer vers son niveau d'équilibre négatif. Sa version stationnaire est moins crédible ici. Au vu du test précédent et de l'unique trajectoire de $2000$ points dont nous disposons, nous le voyons toutefois comme une piste à confirmer plutôt que comme une certitude.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit.
+
+\subsection*{Test du brownien avec dérive}
+
+Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne alors $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
+
+\begin{center}
+  $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
+\end{center}
+
+On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien (figure~\ref{fig:sim-derive}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{virus4_sim_derive.png}
+  \caption{Trois trajectoires simulées du brownien avec dérive (en gris) et le virus reconstruit.}
+  \label{fig:sim-derive}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-9}$ sur de nombreuses simulations, largement inférieure à $0{,}05$.
+
+\textbf{À priori, le brownien avec dérive n'est pas retenu.}
+
+\subsection*{Test de l'Ornstein-Uhlenbeck}
+
+L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En le discrétisant, on obtient
+
+\begin{equation}\label{eq:ou-disc}
+  \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
+\end{equation}
+
+une relation linéaire entre $\Delta X_i$ et $X_i$. Sa pente vaut $-\theta\,dt$ et son ordonnée à l'origine $\theta\mu\,dt$, ce qui donne $\theta$ puis $\mu$. Les résidus de la régression valent $\sigma\,\Delta B_i$, d'écart-type $\sigma\sqrt{dt}$, donc $\sigma$ s'obtient en divisant l'écart-type des résidus par $\sqrt{dt}$, comme pour la dérive. On trouve :
+
+\begin{center}
+  $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
+\end{center}
+
+Pour simuler le processus, on utilise sa solution exacte. En appliquant le calcul d'Itô à $e^{\theta t}(X_t - \mu)$, qui est linéaire en $X_t$ et n'a donc pas de terme du second ordre, on obtient
+
+\begin{equation}\label{eq:ou-ito}
+  d\!\left[e^{\theta t}(X_t-\mu)\right] = \theta\,e^{\theta t}(X_t-\mu)\,dt + e^{\theta t}\,dX_t = \sigma\,e^{\theta t}\,dB_t.
+\end{equation}
+
+En intégrant entre $0$ et $t$ avec $X_0 = 0$, il vient
+
+\begin{equation}\label{eq:ou-sol}
+  X_t = \mu\,(1 - e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s,
+\end{equation}
+
+où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien (figure~\ref{fig:sim-ou}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{virus4_sim_ou.png}
+  \caption{Trois trajectoires simulées de l'Ornstein-Uhlenbeck (en gris) et le virus reconstruit.}
+  \label{fig:sim-ou}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-7}$, elle aussi largement inférieure à $0{,}05$.
+
+\textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
+
+\subsection*{Bilan}
+
+Les deux candidats sont donc écartés. Ce rejet rejoint le fait que les différences ne sont pas gaussiennes, alors que les deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
 
 \end{document}
