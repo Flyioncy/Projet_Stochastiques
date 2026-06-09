@@ -159,19 +159,22 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
 
 Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Il reste à les mettre à l'épreuve.
 
-\subsection*{Validation par simulation du système couplé}
+\subsection*{Validation des candidats par simulation}
 
-Pour valider un modèle de $X_t$, nous simulons une trajectoire du modèle, nous l'injectons dans le système~\eqref{eq:systeme} pour en déduire $(V,P)$, puis nous comparons ces $(V,P)$ aux données par un test de Kolmogorov-Smirnov à deux échantillons. L'Ornstein-Uhlenbeck est estimé par la régression des différences sur le niveau ($\theta\approx0{,}07$, $\mu\approx-0{,}66$, $\sigma\approx0{,}05$) et le brownien avec dérive par la moyenne et l'écart-type des différences ($\nu\approx-0{,}02$, $\sigma\approx0{,}05$).
+Pour départager les deux candidats, nous estimons les constantes de chaque modèle, nous en simulons des trajectoires de $X_t$, puis nous comparons par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit. Si un modèle décrit bien le virus, ses simulations doivent suivre la même loi et le test ne doit pas conduire à l'écarter. Nous travaillons directement sur $X_t$ car un modèle qui reproduit le virus reproduira aussi les populations qui en découlent.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=\textwidth]{virus4_vp_validation.png}
-  \caption{Données observées (en couleur) et trajectoires $(V,P)$ simulées (en gris) à partir de chaque modèle de $X_t$, l'Ornstein-Uhlenbeck à gauche et le brownien avec dérive à droite.}
-  \label{fig:val}
-\end{figure}
+\paragraph{Estimation des constantes.} Les constantes se lisent sur les différences $\Delta X_i = X_{i+1} - X_i$. En discrétisant l'Ornstein-Uhlenbeck $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$, on obtient
 
-L'écart est net sur la figure~\ref{fig:val}. Les prédateurs observés s'effondrent puis restent bas alors que les trajectoires simulées rebondissent et oscillent largement. Le test confirme ce constat avec des p-values de l'ordre de $10^{-50}$ pour les deux modèles, sur $V$ comme sur $P$.
+\begin{equation}\label{eq:ou-disc}
+  \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
+\end{equation}
 
-À priori, ni l'Ornstein-Uhlenbeck ni le brownien avec dérive ne sont donc retenus. Un bruit gaussien stationnaire, qu'il revienne à la moyenne ou non, ne reproduit pas l'effondrement observé, ce qui rejoint le fait que les différences ne sont pas gaussiennes. Le modèle du virus reste donc à trouver.
+soit une relation linéaire entre $\Delta X_i$ et $X_i$. Une régression donne alors $\theta$ par la pente, $\mu$ par l'ordonnée à l'origine et $\sigma$ par l'écart-type des résidus, ce qui donne $\theta\approx0{,}07$, $\mu\approx-0{,}66$ et $\sigma\approx0{,}05$. Pour le brownien avec dérive $dX_t = \nu\,dt + \sigma\,dB_t$, la moyenne et l'écart-type des différences donnent directement $\nu = \overline{\Delta X}/dt \approx -0{,}02$ et $\sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05$.
+
+\paragraph{Simulation.} Nous simulons ces modèles à la manière du cours. On tire d'abord un mouvement brownien standard comme la somme cumulée d'incréments gaussiens indépendants de variance $dt$, puis on en déduit chaque trajectoire, par $X_t = \nu t + \sigma B_t$ pour la dérive et par un schéma d'Euler-Maruyama pour l'Ornstein-Uhlenbeck.
+
+\paragraph{Test.} Pour chaque modèle nous répétons la simulation un grand nombre de fois et nous relevons la p-value du test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit. La p-value moyenne vaut environ $3\cdot10^{-10}$ pour l'Ornstein-Uhlenbeck et $8\cdot10^{-15}$ pour le brownien avec dérive, très en dessous du seuil usuel de $0{,}05$.
+
+À priori, ni l'Ornstein-Uhlenbeck ni le brownien avec dérive ne sont retenus. Ce résultat rejoint le fait que les différences ne sont pas gaussiennes, alors que ces deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
 
 \end{document}
