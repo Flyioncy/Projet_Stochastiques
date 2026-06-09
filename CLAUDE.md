@@ -90,6 +90,7 @@ Le rapport est rédigé en **LaTeX**. Le fichier source est un `.tex` compilable
 Sur le ton et la ponctuation :
 
 - Le ton reste **personnel et mesuré**, plutôt qu'affirmatif et impersonnel. On préfère « une idée a été de… », « nous avons eu l'idée de… », « il nous a semblé… » à des formulations péremptoires comme « on peut montrer que… ».
+- On écrit de façon **directe et concise**, en évitant les formulations alambiquées et les précautions à rallonge. Une phrase courte et nette vaut mieux qu'un long paragraphe de nuances. Par exemple, après un test, « À priori, l'hypothèse … n'est pas retenue. » suffit.
 - On **limite les deux-points** `:`, qui hachent le texte. La plupart du temps, une reformulation de la phrase est préférable.
 - On **évite d'empiler les virgules**. Les conjonctions de subordination (`puisque`, `tandis que`, `alors que`, `lorsque`, `parce que`, `si bien que`…) rendent souvent mieux le lien logique. Cela dit, on garde des phrases qui ne sont pas trop longues.
 - En particulier, **on ne met pas de virgule devant une conjonction de subordination** placée en milieu de phrase ; la subordonnée s'enchaîne directement (« … aucun bruit puisque l'on a… » plutôt que « …, puisque… »). La virgule ne se justifie que lorsque la subordonnée est placée en tête de phrase.
