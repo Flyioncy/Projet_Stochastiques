@@ -26,8 +26,6 @@
 
 \textit{Tous les résultats présentés dans ce rapport sont reproductibles dans le notebook qui l'accompagne, où l'on trouve également l'ensemble des codes.}
 
-\bigskip
-
 \section*{Contexte et modèle}
 
 On étudie la dynamique de deux populations en interaction, les victimes (les proies) de densité $V_t$ et les prédateurs de densité $P_t$. Le point de départ est le modèle de Lotka-Volterra où les proies se reproduisent seules mais se font manger par les prédateurs tandis que les prédateurs meurent naturellement mais profitent de l'abondance des proies pour se reproduire.
@@ -89,5 +87,41 @@ Pour essayer de mesurer l'effet du virus, nous avons eu l'idée d'intégrer le m
 La comparaison nous a semblé parlante. Le modèle classique produit des oscillations régulières et entretenues où les deux populations tournent indéfiniment autour de leur point d'équilibre et où le portrait de phase serait une courbe fermée bien nette. Les données observées partent dans la même direction au tout début mais s'en écartent franchement ensuite. La population de prédateurs ne semble notamment pas ré-osciller puisqu'elle s'effondre progressivement et reste très basse alors que le modèle classique la voit remonter à chaque cycle.
 
 Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pas d'ajouter un petit bruit autour de la trajectoire classique mais qu'il modifie la dynamique d'ensemble et casse la périodicité. C'est sur ce comportement que nous avons choisi d'appuyer la modélisation de $(X_t)$ dans la suite.
+
+\subsection*{Reconstruction du virus $X_t$}
+
+Pour aller plus loin nous avons eu l'idée de remonter directement au virus à partir des données. L'équation des proies ne comporte aucun terme brownien, donc nous pouvons la discrétiser simplement dans le même esprit que la récupération de $dt$. En remplaçant $dV_t$ par l'incrément $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
+
+\begin{equation}\label{eq:disc}
+  V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.
+\end{equation}
+
+Il ne reste plus qu'à isoler le virus, dont tous les autres termes sont connus.
+
+\begin{equation}\label{eq:xrec}
+  X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}.
+\end{equation}
+
+Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma discrétisé, sans aucune hypothèse de modèle. Nous l'avons sauvegardée dans le fichier \texttt{virus4\_Xt.csv} pour que chacun puisse repartir de la même série. La figure~\ref{fig:xt} montre le virus reconstruit et ses incréments.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{virus4_Xt.png}
+  \caption{En haut, le virus reconstruit $X_t$ (la moyenne empirique est en tirets). En bas, ses incréments $\Delta X_t = X_{t+dt} - X_t$.}
+  \label{fig:xt}
+\end{figure}
+
+Le virus part de $X_0 \approx 0$ puis décroît régulièrement jusque vers $-0{,}6$ aux alentours de $t \approx 13$, où il se stabilise en fluctuant. Sa moyenne empirique vaut environ $-0{,}40$, donc négative comme nous l'attendions. Un virus de moyenne négative abaisse en effet le taux de croissance des proies et décale l'équilibre des prédateurs vers $P^* = \tfrac{1}{2} + \tfrac{3}{4}\mathbb{E}[X]$, ce qui éclaire leur effondrement. Le scénario est même plus riche que prévu puisque l'intensité du virus ne reste pas constante mais se renforce au cours du temps, étouffant progressivement les prédateurs.
+
+Les incréments $\Delta X_t$, eux, ressemblent à un bruit centré d'amplitude à peu près constante, sans tendance visible. Le virus lui-même paraît donc non stationnaire sur la fenêtre observée, alors que ses variations le sont. Pour préciser sa structure nous avons regardé son autocorrélation (figure~\ref{fig:xtacf}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{virus4_Xt_acf.png}
+  \caption{Autocorrélation empirique de $X_t$ en fonction du décalage.}
+  \label{fig:xtacf}
+\end{figure}
+
+L'autocorrélation décroît lentement et reste forte même à grand décalage, ce qui trahit une mémoire longue plutôt qu'un retour rapide à la moyenne. Cela oriente vers une structure de type marche aléatoire (un mouvement brownien, éventuellement avec dérive) ou vers un processus à retour à la moyenne très lent. Nous n'avons pas encore tranché entre ces deux pistes, et c'est ce que nous chercherons à départager ensuite.
 
 \end{document}
