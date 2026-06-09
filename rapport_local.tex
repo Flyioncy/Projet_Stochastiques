@@ -110,7 +110,7 @@ Tous les autres termes étant connus, il ne reste qu'à isoler le virus.
   X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}.
 \end{equation}
 
-Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma, sans aucune hypothèse de modèle. La figure~\ref{fig:xt} montre le virus reconstruit et ses incréments.
+Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma, sans aucune hypothèse de modèle. La figure~\ref{fig:xt} montre le virus reconstruit et ses incréments, et le tableau~\ref{tab:stats} en résume les statistiques.
 
 \begin{figure}[ht]
   \centering
@@ -118,10 +118,6 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
   \caption{En haut, le virus reconstruit $X_t$ (la moyenne empirique est en tirets). En bas, ses incréments $\Delta X_t = X_{t+dt} - X_t$.}
   \label{fig:xt}
 \end{figure}
-
-Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau.
-
-Le tableau~\ref{tab:stats} résume la moyenne et l'écart-type du virus et de ses incréments. Les incréments $\Delta X_t = X_{t+dt} - X_t$ ont une moyenne quasi nulle et un faible écart-type, ce qui leur donne l'allure d'un bruit centré de petite amplitude.
 
 \begin{table}[ht]
   \centering
@@ -136,5 +132,7 @@ Le tableau~\ref{tab:stats} résume la moyenne et l'écart-type du virus et de se
   \caption{Moyenne et écart-type empiriques du virus reconstruit $X_t$ et de ses incréments $\Delta X_t$.}
   \label{tab:stats}
 \end{table}
+
+Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau. Ses incréments $\Delta X_t = X_{t+dt} - X_t$ ont une moyenne quasi nulle et un faible écart-type, ce qui leur donne l'allure d'un bruit centré de petite amplitude.
 
 \end{document}
