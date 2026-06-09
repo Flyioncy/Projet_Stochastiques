@@ -130,7 +130,7 @@ La moyenne observée semble cohérente avec notre prédiction précédente. En r
 
 Toutefois, dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
 
-Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. \textbf{À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.}
+Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$, largement inférieure à $0{,}05$. \textbf{À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.}
 
 \subsection*{Un modèle du cours pour $X_t$ ?}
 
@@ -166,9 +166,18 @@ Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution i
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
 \end{center}
 
-On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien. Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-9}$ sur de nombreuses simulations.
+On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien (figure~\ref{fig:sim-derive}).
 
-Cette p-value est très inférieure à $0{,}05$. \textbf{À priori, le brownien avec dérive n'est pas retenu.}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{virus4_sim_derive.png}
+  \caption{Trois trajectoires simulées du brownien avec dérive (en gris) et le virus reconstruit (en violet).}
+  \label{fig:sim-derive}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-9}$ sur de nombreuses simulations, largement inférieure à $0{,}05$.
+
+\textbf{À priori, le brownien avec dérive n'est pas retenu.}
 
 \subsection*{Test de l'Ornstein-Uhlenbeck}
 
@@ -196,9 +205,18 @@ En intégrant entre $0$ et $t$ avec $X_0 = 0$, il vient
   X_t = \mu\,(1 - e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s,
 \end{equation}
 
-où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien. Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-7}$.
+où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien (figure~\ref{fig:sim-ou}).
 
-Cette p-value est elle aussi très inférieure à $0{,}05$. \textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{virus4_sim_ou.png}
+  \caption{Trois trajectoires simulées de l'Ornstein-Uhlenbeck (en gris) et le virus reconstruit (en violet).}
+  \label{fig:sim-ou}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-7}$, elle aussi largement inférieure à $0{,}05$.
+
+\textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
 
 \subsection*{Bilan}
 
