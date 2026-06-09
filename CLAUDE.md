@@ -71,6 +71,8 @@ Concrètement, pour chaque tentative pertinente, le rapport doit expliquer le ra
 
 **Sur l'utilisation de l'IA :** l'enseignant autorise l'IA à condition qu'elle soit déclarée. On ne va pas pour autant signaler chaque ligne générée, ce qui rendrait le rapport illisible. À chaque push sur `main`, le membre indiquera dans son message de commit (ou en commentaire dans le rapport) si la contribution contient des éléments produits avec l'IA qui méritent d'être mentionnés explicitement dans le rapport. Ce sera à chacun de juger ce qui est réellement significatif — utiliser Claude pour écrire une boucle `for` ne mérite pas une note de bas de page.
 
+**Sur les tests statistiques :** le professeur insiste fortement sur leur interprétation, à respecter dans le rapport. Un test (Kolmogorov-Smirnov, etc.) ne *rejette* jamais une hypothèse au sens où il prouverait qu'elle est fausse. Comme en cours et en TP, on ne regarde que la **p-value**. Une p-value faible indique qu'il est *vraisemblablement plausible de ne pas retenir* l'hypothèse, ce qui n'est pas la même chose que de la déclarer rejetée. On reste d'autant plus prudent qu'un seul test, surtout sur un jeu de données unique et restreint, ne suffit jamais à conclure. Ces conclusions se formulent donc au conditionnel.
+
 ---
 
 ## Format du rapport
