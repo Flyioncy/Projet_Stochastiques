@@ -121,18 +121,35 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{lcc}
+  \begin{tabular}{lc}
     \hline
-     & moyenne & écart-type \\
+    grandeur & valeur \\
     \hline
-    $X_t$ & $-0{,}40$ & $0{,}23$ \\
-    $\Delta X_t$ & $-3\cdot 10^{-4}$ & $6\cdot 10^{-3}$ \\
+    moyenne de $X_t$ & $-0{,}40$ \\
+    écart-type de $X_t$ & $0{,}23$ \\
+    moyenne de $\Delta X_t$ & $-3\cdot 10^{-4}$ \\
+    coefficient de diffusion $\sigma = \mathrm{std}(\Delta X_t)/\sqrt{dt}$ & $0{,}05$ \\
     \hline
   \end{tabular}
-  \caption{Moyenne et écart-type empiriques du virus reconstruit $X_t$ et de ses incréments $\Delta X_t$.}
+  \caption{Statistiques empiriques du virus reconstruit $X_t$ et de ses incréments $\Delta X_t$. Pour les incréments, l'écart-type brut dépend du pas $dt$, on lui préfère le coefficient de diffusion $\sigma$.}
   \label{tab:stats}
 \end{table}
 
-Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau. Ses incréments $\Delta X_t = X_{t+dt} - X_t$ ont une moyenne quasi nulle et un faible écart-type, ce qui leur donne l'allure d'un bruit centré de petite amplitude.
+Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau. Ses incréments $\Delta X_t$ ont une moyenne quasi nulle et un coefficient de diffusion $\sigma \approx 0{,}05$, ce qui leur donne l'allure d'un bruit centré de petite amplitude.
+
+\subsection*{Quel modèle pour $X_t$ ?}
+
+Avant de fixer une équation pour $(X_t)$, nous avons passé en revue les modèles vus en cours pour voir lesquels pouvaient coller. Trois se laissent écarter d'emblée. Le mouvement brownien géométrique, qui sous-tend aussi le modèle de Black et Scholes, garde toujours un signe constant alors que notre virus passe nettement sous zéro. Le pont brownien est épinglé à une valeur fixe en fin d'intervalle, ce que la trajectoire reconstruite ne fait pas. Le brownien intégral donnerait quant à lui une trajectoire très lisse, bien plus régulière que les incréments bruités observés.
+
+Restent les modèles à tendance ou à retour à la moyenne. Une simple dérive constante paraît peu compatible avec le plateau observé puisqu'elle continuerait de pousser le virus vers le bas sans jamais le stabiliser. Un processus d'Ornstein-Uhlenbeck, qui ramène doucement le virus vers un niveau d'équilibre négatif, nous a semblé le candidat le plus naturel. Sa version stationnaire est en revanche peu vraisemblable puisque le virus part de $0$ et semble encore relaxer vers ce niveau, ce qui évoque plutôt un régime transitoire. Le modèle de Verhulst, pensé pour une population positive qui sature, s'adapte mal à un virus qui devient négatif.
+
+La distribution des incréments apporte toutefois une nuance. Elle est plus piquée qu'une loi normale et possède des queues plus lourdes (figure~\ref{fig:hist}). Aucun de ces modèles à bruit gaussien ne décrirait donc parfaitement $X_t$. Sur une seule trajectoire de $2000$ points nous préférons rester au stade de l'intuition, en retenant l'Ornstein-Uhlenbeck comme piste principale sans l'affirmer.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.75\textwidth]{virus4_dXt_hist.png}
+  \caption{Distribution des incréments $\Delta X_t$ comparée à une loi normale de mêmes moyenne et écart-type. La forme est plus piquée et à queues plus lourdes qu'une gaussienne.}
+  \label{fig:hist}
+\end{figure}
 
 \end{document}
