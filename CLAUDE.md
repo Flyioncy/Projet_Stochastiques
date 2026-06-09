@@ -95,6 +95,26 @@ Sur le ton et la ponctuation :
 
 ---
 
+## Calcul stochastique — méthode de calcul différentiel (cours 6 et 7)
+
+Pour manipuler les EDS et calculer des différentielles, on suit le **calcul « différentiel » d'Itô** du cours (chapitre 5), qui retrouve les résultats « en raisonnant par approximations comme en physique ». Ce ne sont pas des démonstrations (la version rigoureuse est la formule d'Itô), mais les résultats sont corrects et la méthode est rapide.
+
+**Notation différentielle.** Un processus d'Itô s'écrit $dX_t = U_t\,dt + V_t\,dB_t$ (dérive $U_t\,dt$ + partie brownienne $V_t\,dB_t$). Cette écriture n'est qu'une traduction de la forme intégrale, pas un objet à part entière.
+
+**Règles de calcul (mnémotechnique).** On ne garde que les termes d'ordre 1 :
+
+$$(dt)^2 \simeq 0, \qquad dt\,dB_t \simeq 0, \qquad (dB_t)^2 \simeq dt.$$
+
+**Méthode pour calculer $d\,f(X_t)$.** On écrit l'incrément de deux façons, puis on développe par un DL (Taylor) de $f$ à l'ordre 2 :
+
+$$f(X_{t+dt}) \simeq f(X_t) + d\,f(X_t), \qquad f(X_{t+dt}) = f(X_t + dX_t) = f(X_t) + f'(X_t)\,dX_t + \tfrac{1}{2}f''(X_t)\,(dX_t)^2 + o\big((dX_t)^2\big),$$
+
+et on remplace $(dX_t)^2$ à l'aide des règles ci-dessus. Exemple du cours : $d(\sin B_t) = \cos(B_t)\,dB_t - \tfrac{1}{2}\sin(B_t)\,dt$, où le terme $(dB_t)^2 \simeq dt$ survit.
+
+**Conséquence utile.** Si un processus n'a **pas** de partie brownienne (dérive pure, $dX_t = U_t\,dt$), alors $(dX_t)^2 \simeq (dt)^2 \simeq 0$ : le terme du second ordre disparaît et la règle de la chaîne ordinaire s'applique (par exemple $d\ln V_t = dV_t/V_t$). On le justifie par le DL plutôt que de le postuler.
+
+---
+
 ## Style de code
 
 Le style s'inspire directement des corrections du cours. Les conventions à respecter dans le notebook :
