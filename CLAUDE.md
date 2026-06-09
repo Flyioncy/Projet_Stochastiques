@@ -99,6 +99,9 @@ Sur le ton et la ponctuation :
 - Quand on met plusieurs modèles à l'épreuve, on consacre **une sous-section à chacun**, sans les mélanger.
 - On **sépare nettement la démarche et le résultat** : après avoir décrit la méthode, on saute une ligne et on met les valeurs obtenues en avant, par exemple dans un `\begin{center}`.
 - On ne justifie rien par « comme en cours » ou « à la manière du cours », le correcteur connaît déjà le contenu du cours.
+- On n'énonce pas un résultat mathématique sans le justifier. S'il n'est pas dans le cours, on le redémontre proprement, le plus souvent via le calcul d'Itô.
+- La conclusion d'un test est séparée du calcul. On donne d'abord la p-value, puis à part le verdict (modèle retenu ou non).
+- On ne juge pas un modèle sur sa seule moyenne. Ce qu'on cherche à capturer, c'est la loi du processus (le bruit), donc on teste la distribution.
 
 ---
 
