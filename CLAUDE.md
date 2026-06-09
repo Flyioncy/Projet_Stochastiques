@@ -71,7 +71,7 @@ Concrètement, pour chaque tentative pertinente, le rapport doit expliquer le ra
 
 **Sur l'utilisation de l'IA :** l'enseignant autorise l'IA à condition qu'elle soit déclarée. On ne va pas pour autant signaler chaque ligne générée, ce qui rendrait le rapport illisible. À chaque push sur `main`, le membre indiquera dans son message de commit (ou en commentaire dans le rapport) si la contribution contient des éléments produits avec l'IA qui méritent d'être mentionnés explicitement dans le rapport. Ce sera à chacun de juger ce qui est réellement significatif — utiliser Claude pour écrire une boucle `for` ne mérite pas une note de bas de page.
 
-**Sur les tests statistiques :** le professeur insiste fortement sur leur interprétation, à respecter dans le rapport. Un test (Kolmogorov-Smirnov, etc.) ne *rejette* jamais une hypothèse au sens où il prouverait qu'elle est fausse. Comme en cours et en TP, on ne regarde que la **p-value**. Une p-value faible indique qu'il est *vraisemblablement plausible de ne pas retenir* l'hypothèse, ce qui n'est pas la même chose que de la déclarer rejetée. On reste d'autant plus prudent qu'un seul test, surtout sur un jeu de données unique et restreint, ne suffit jamais à conclure. Ces conclusions se formulent donc au conditionnel.
+**Sur les tests statistiques :** le professeur insiste fortement sur leur interprétation, à respecter dans le rapport. Un test (Kolmogorov-Smirnov, etc.) ne *rejette* jamais une hypothèse au sens où il prouverait qu'elle est fausse. Comme en cours et en TP, on ne regarde que la **p-value**. Une p-value faible indique qu'il est *vraisemblablement plausible de ne pas retenir* l'hypothèse, ce qui n'est pas la même chose que de la déclarer rejetée. On reste d'autant plus prudent qu'un seul test, surtout sur un jeu de données unique et restreint, ne suffit jamais à conclure. Ces conclusions se formulent donc au conditionnel. On reste dans le cadre du cours et seule la p-value du test nous sert, sans statistique annexe comme une distance calibrée ou un Monte-Carlo sur une statistique de test. On garde aussi un esprit critique, car une p-value faible invite à changer d'hypothèse plutôt qu'à chercher à sauver le modèle (pas de biais de confirmation).
 
 ---
 
@@ -128,8 +128,24 @@ et on remplace $(dX_t)^2$ à l'aide des règles ci-dessus. Exemple du cours : $d
 
 **Conséquence utile.** Si un processus n'a **pas** de partie brownienne (dérive pure, $dX_t = U_t\,dt$), alors $(dX_t)^2 \simeq (dt)^2 \simeq 0$ : le terme du second ordre disparaît et la règle de la chaîne ordinaire s'applique (par exemple $d\ln V_t = dV_t/V_t$). On le justifie par le DL plutôt que de le postuler.
 
----
+### Simulation (méthode du cours / TD3)
 
+On simule d'abord un **mouvement brownien standard** comme la somme cumulée d'incréments gaussiens indépendants de variance $dt$ : `B = np.cumsum(scs.norm(scale=np.sqrt(dt)).rvs(size=n))` (cf. TD3). On construit ensuite le processus voulu à partir de ce brownien ou de ses incréments $dB_i = B_{i+1}-B_i$ :
+
+- brownien avec dérive : $X_t = X_0 + \nu t + \sigma B_t$ ;
+- EDS générale $dX = a(X)\,dt + b(X)\,dB$ : schéma d'Euler-Maruyama $X_{i+1} = X_i + a(X_i)\,dt + b(X_i)\,dB_i$.
+
+On ne réinvente pas un schéma maison ; on part toujours du brownien, comme dans les TD.
+
+### Estimation des paramètres d'une EDS
+
+On discrétise l'EDS et on lit les paramètres sur les **différences** $\Delta X_i = X_{i+1}-X_i$. Pour un Ornstein-Uhlenbeck $dX = \theta(\mu-X)\,dt + \sigma\,dB$, on a $\Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i$, donc une **régression linéaire** de $\Delta X_i$ sur $X_i$ donne $\theta$ (pente), $\mu$ (ordonnée à l'origine) et $\sigma$ (écart-type des résidus). Pour une simple dérive $dX = \nu\,dt + \sigma\,dB$, on a $\nu = \overline{\Delta X}/dt$ et $\sigma = \mathrm{std}(\Delta X)/\sqrt{dt}$.
+
+### Monte-Carlo
+
+Le « Monte-Carlo » du cours, c'est **estimer une probabilité ou une espérance par la moyenne sur de nombreuses simulations**, justifié par la loi des grands nombres. On s'en servira par exemple pour les probabilités d'extinction. On ne l'emploie **pas** pour calibrer une statistique de test ; pour juger un modèle, on s'en tient à la p-value du test KS.
+
+---
 ## Style de code
 
 Le style s'inspire directement des corrections du cours. Les conventions à respecter dans le notebook :
