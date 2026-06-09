@@ -121,6 +121,17 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
 
 Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau.
 
-Pour caractériser ses variations sans trop présumer de leur nature, nous avons simplement regardé la moyenne et la dispersion des incréments $\Delta X_t = X_{t+dt} - X_t$. Ils auraient l'allure d'un bruit centré de faible amplitude, de moyenne de l'ordre de $-3\cdot 10^{-4}$ et d'écart-type de l'ordre de $6\cdot 10^{-3}$. Le virus lui-même paraîtrait donc non stationnaire sur la fenêtre observée alors que ses variations sembleraient l'être. Distinguer plus finement sa structure, par exemple une marche aléatoire d'un retour à la moyenne très lent, demanderait bien plus que ces quelques échantillons et reste pour l'instant une question ouverte.
+Pour caractériser ses variations sans trop présumer de leur nature, nous avons regardé la moyenne et la dispersion des incréments $\Delta X_t = X_{t+dt} - X_t$. Ils auraient l'allure d'un bruit centré de faible amplitude, de moyenne de l'ordre de $-3\cdot 10^{-4}$ et d'écart-type de l'ordre de $6\cdot 10^{-3}$. La corrélation entre incréments successifs vaut environ $0{,}26$ là où elle serait nulle pour un mouvement brownien, et une régression de $\Delta X$ sur $X$ ne révèle qu'un retour à la moyenne très faible. Aucun de ces indices ne pointe franchement vers un modèle plutôt qu'un autre.
+
+On aurait aussi pu se fier à l'autocorrélation du niveau $X_t$, mais elle serait trompeuse puisque $X_t$ n'est pas stationnaire. La figure~\ref{fig:acf} la compare à celle de quelques mouvements browniens simulés, à titre indicatif. La trajectoire reconstruite se confond avec eux alors qu'un brownien n'a ni mémoire ni retour à la moyenne, si bien qu'une décroissance lente ne prouve rien à elle seule.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{virus4_acf_vs_brownien.png}
+  \caption{Autocorrélation du niveau $X_t$ (en orange) comparée à celle de mouvements browniens simulés (en gris). Les courbes se confondent, donc la décroissance lente ne traduit pas une mémoire particulière.}
+  \label{fig:acf}
+\end{figure}
+
+Distinguer plus finement la structure de $X_t$, par exemple une marche aléatoire d'un retour à la moyenne très lent, demanderait bien plus que cette unique trajectoire de $2000$ points et reste pour l'instant une question ouverte.
 
 \end{document}
