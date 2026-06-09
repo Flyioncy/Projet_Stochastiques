@@ -64,6 +64,17 @@ Le rapport est rédigé en **LaTeX**. Le fichier source est un `.tex` compilable
 - Chaque figure générée par le code doit apparaître dans le rapport avec une légende descriptive.
 - La rédaction est en français, dans un registre scientifique mais accessible — on évite les phrases trop sèches et on prend le temps d'expliquer ce qu'on fait et pourquoi.
 - Le rapport inclut une section par grande étape de travail, avec des sous-sections si nécessaire, et une conclusion générale.
+- Les sections et sous-sections sont **non numérotées** (`\section*`, `\subsection*`).
+- Le rapport ne comporte pas de résumé/abstract. Il s'ouvre simplement par une courte phrase en italique rappelant que tous les résultats sont reproductibles dans le notebook, où l'on trouve aussi les codes.
+- Chaque paragraphe du source `.tex` est écrit **sur une seule ligne** (pas de retour à la ligne manuel à l'intérieur d'un paragraphe).
+
+Sur le ton et la ponctuation :
+
+- Le ton reste **personnel et mesuré**, plutôt qu'affirmatif et impersonnel. On préfère « une idée a été de… », « nous avons eu l'idée de… », « il nous a semblé… » à des formulations péremptoires comme « on peut montrer que… ».
+- On **limite les deux-points** `:`, qui hachent le texte. La plupart du temps, une reformulation de la phrase est préférable.
+- On **évite d'empiler les virgules**. Les conjonctions de subordination (`puisque`, `tandis que`, `alors que`, `lorsque`, `parce que`, `si bien que`…) rendent souvent mieux le lien logique. Cela dit, on garde des phrases qui ne sont pas trop longues.
+- En particulier, **on ne met pas de virgule devant une conjonction de subordination** placée en milieu de phrase ; la subordonnée s'enchaîne directement (« … aucun bruit puisque l'on a… » plutôt que « …, puisque… »). La virgule ne se justifie que lorsque la subordonnée est placée en tête de phrase.
+- La mise en page est **légèrement aérée** : interligne un peu augmenté et espacement entre les paragraphes (`\linespread{1.05}` et `\setlength{\parskip}{0.6em}` dans le préambule), avec quelques sauts de ligne pour détacher les équations du texte.
 
 ---
 
@@ -109,8 +120,9 @@ Projet_Stochastiques/
 ├── Projet.pdf         # Sujet officiel
 ├── virus4.csv         # Données premier modèle
 ├── virus6.csv         # Données deuxième modèle
-├── rapport.tex        # Source LaTeX du rapport (à créer)
-└── notebook.ipynb     # Jupyter notebook principal (à créer)
+├── rapport.tex        # Source LaTeX du rapport
+├── notebook.ipynb     # Jupyter notebook principal
+└── figures/           # Figures générées par le notebook
 ```
 
 ---
