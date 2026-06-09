@@ -90,13 +90,13 @@ Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pa
 
 \subsection*{Reconstruction du virus $X_t$}
 
-Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $\mu = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + \mu = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
+Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $m = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + m = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
 
 \begin{equation}\label{eq:equilibre}
-  P^* = \frac{1}{2} + \frac{3}{4}\mu.
+  P^* = \frac{1}{2} + \frac{3}{4}m.
 \end{equation}
 
-Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $\mu$ négative.
+Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $m$ négative.
 
 Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
@@ -130,8 +130,7 @@ La moyenne observée semble cohérente avec notre prédiction précédente. En r
 
 Toutefois, dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
 
-
-Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.
+Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. \textbf{À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.}
 
 \subsection*{Un modèle du cours pour $X_t$ ?}
 
@@ -159,6 +158,18 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
 
 Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit. Nous testons directement $X_t$ car un modèle qui le reproduit reproduira aussi les populations.
 
+\subsection*{Test du brownien avec dérive}
+
+Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne alors $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
+
+\begin{center}
+  $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
+\end{center}
+
+On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien. Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-9}$ sur de nombreuses simulations.
+
+Cette p-value est très inférieure à $0{,}05$. \textbf{À priori, le brownien avec dérive n'est pas retenu.}
+
 \subsection*{Test de l'Ornstein-Uhlenbeck}
 
 L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En le discrétisant, on obtient
@@ -167,7 +178,7 @@ L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En 
   \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
 \end{equation}
 
-une relation linéaire entre $\Delta X_i$ et $X_i$. En faisant la régression linéaire de $\Delta X_i$ sur $X_i$, on trouve :
+une relation linéaire entre $\Delta X_i$ et $X_i$. Sa pente vaut $-\theta\,dt$ et son ordonnée à l'origine $\theta\mu\,dt$, ce qui donne $\theta$ puis $\mu$. Les résidus de la régression valent $\sigma\,\Delta B_i$, d'écart-type $\sigma\sqrt{dt}$, donc $\sigma$ s'obtient en divisant l'écart-type des résidus par $\sqrt{dt}$, comme pour la dérive. On trouve :
 
 \begin{center}
   $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
@@ -185,25 +196,9 @@ En intégrant entre $0$ et $t$ avec $X_0 = 0$, il vient
   X_t = \mu\,(1 - e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s,
 \end{equation}
 
-où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien.
+où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien. Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-7}$.
 
-Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-7}$ sur de nombreuses simulations.
-
-Cette p-value est très inférieure à $0{,}05$. À priori, l'Ornstein-Uhlenbeck n'est pas retenu.
-
-\subsection*{Test du brownien avec dérive}
-
-Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$, de sorte que la moyenne et l'écart-type des différences donnent
-
-\begin{center}
-  $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
-\end{center}
-
-On simule $X_t = \nu\,t + \sigma\,B_t$ à partir du même brownien.
-
-Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-9}$.
-
-Cette p-value est elle aussi très inférieure à $0{,}05$. À priori, le brownien avec dérive n'est pas retenu.
+Cette p-value est elle aussi très inférieure à $0{,}05$. \textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
 
 \subsection*{Bilan}
 
