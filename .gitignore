@@ -1,0 +1,14 @@
+# Les fichiers de travail personnels (rapport_local.tex, notebook_local.ipynb,
+# CLAUDE.local.md) SONT suivis sur la branche personnelle pour servir de sauvegarde,
+# mais ne doivent jamais être promus sur main (voir CLAUDE.md, section Workflow Git).
+
+# Sous-produits LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# Caches Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
