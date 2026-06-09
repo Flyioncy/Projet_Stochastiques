@@ -45,9 +45,9 @@ Un tel système admet des solutions périodiques si bien que les deux population
 Dans le jeu de données \texttt{virus4.csv}, les proies sont en plus frappées par un virus que l'on modélise par un processus stochastique $(X_t)_{t\in[0,\tau]}$. Le système devient alors
 
 \begin{equation}\label{eq:systeme}
-  dV_t = V_t\left(a - b\,P_t + X_t\right)dt,
+  dV_t = V_t\left(\tfrac{2}{3} - \tfrac{4}{3}P_t + X_t\right)dt,
   \qquad
-  dP_t = P_t\left(-c + d\,V_t\right)dt.
+  dP_t = P_t\left(-1 + V_t\right)dt.
 \end{equation}
 
 Le fichier fournit une observation discrétisée de cette dynamique dont la première colonne correspond à $V_t$ et la seconde à $P_t$. Notre objectif est de proposer un modèle pour $(X_t)$ puis de le valider à l'aide de ces données.
@@ -56,13 +56,13 @@ Avant de nous lancer dans la modélisation, il nous a semblé naturel de commenc
 
 \subsection*{Récupération du pas de temps}
 
-Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas de temps de la discrétisation. Une idée a été d'exploiter le fait que l'équation des prédateurs ne contient aucun bruit puisque l'on a exactement $dP_t = P_t(-c + d\,V_t)\,dt$. En discrétisant, le pas de temps devrait alors vérifier
+Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas de temps de la discrétisation. Une idée a été d'exploiter le fait que l'équation des prédateurs ne contient aucun bruit puisque l'on a exactement $dP_t = P_t(-1 + V_t)\,dt$. En discrétisant, le pas de temps devrait alors vérifier
 
 \begin{equation}\label{eq:dt}
-  dt \approx \frac{P_{i+1} - P_i}{P_i\,(-c + d\,V_i)}.
+  dt \approx \frac{P_{i+1} - P_i}{P_i\,(-1 + V_i)}.
 \end{equation}
 
-Nous avons donc moyenné cette quantité sur l'ensemble des points tout en écartant ceux où le dénominateur $-c + d\,V_i$ devient trop petit. On obtient ainsi $dt \approx 0{,}015$, ce qui donne une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de construire l'axe des temps puis de tracer les deux populations (figure~\ref{fig:series}).
+Nous avons donc moyenné cette quantité sur l'ensemble des points tout en écartant ceux où $V_i$ est trop proche de $1$ parce qu'ils annulent le dénominateur. On obtient ainsi $dt \approx 0{,}015$, ce qui donne une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de construire l'axe des temps puis de tracer les deux populations (figure~\ref{fig:series}).
 
 \begin{figure}[ht]
   \centering
@@ -73,7 +73,7 @@ Nous avons donc moyenné cette quantité sur l'ensemble des points tout en écar
 
 \subsection*{Comparaison avec le modèle de Lotka-Volterra classique}
 
-Pour essayer de mesurer l'effet du virus, nous avons eu l'idée d'intégrer le modèle déterministe~\eqref{eq:base}, c'est-à-dire le même système lorsque l'on retire le terme $X_t$. Par identification avec le système fourni, on reconnaît les coefficients $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. Nous sommes partis des mêmes conditions initiales que les données, soit $V_0 = 1$ et $P_0 = 0{,}4$, puis avons intégré par un schéma d'Euler explicite sur la même grille de temps. La figure~\ref{fig:comparaison} superpose les deux trajectoires.
+Pour essayer de mesurer l'effet du virus, nous avons eu l'idée d'intégrer le modèle déterministe classique, c'est-à-dire le même système lorsque l'on retire le terme $X_t$. Une petite identification avec la forme générale~\eqref{eq:base} donne $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. Nous sommes partis des mêmes conditions initiales que les données, soit $V_0 = 1$ et $P_0 = 0{,}4$. La figure~\ref{fig:comparaison} superpose les deux trajectoires.
 
 \begin{figure}[ht]
   \centering
@@ -90,24 +90,24 @@ Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pa
 
 \subsection*{Reconstruction du virus $X_t$}
 
-Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $\mu = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $a - b\,P_t + \mu = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = a/b$ vers
+Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $\mu = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + \mu = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
 
 \begin{equation}\label{eq:equilibre}
-  P^* = \frac{a + \mu}{b}.
+  P^* = \frac{1}{2} + \frac{3}{4}\mu.
 \end{equation}
 
-Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $a/b$, donc on s'attend à une moyenne $\mu$ négative.
+Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $\mu$ négative.
 
 Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par l'incrément $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
 \begin{equation}\label{eq:disc}
-  V_i - V_{i-1} \approx V_{i-1}\left(a - b\,P_{i-1} + X_{i-1}\right)dt.
+  V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.
 \end{equation}
 
 Tous les autres termes étant connus, il ne reste qu'à isoler le virus.
 
 \begin{equation}\label{eq:xrec}
-  X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - a + b\,P_{i-1}.
+  X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}.
 \end{equation}
 
 Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma, sans aucune hypothèse de modèle. La figure~\ref{fig:xt} montre le virus reconstruit et ses incréments.
