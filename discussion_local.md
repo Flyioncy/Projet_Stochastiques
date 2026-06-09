@@ -118,4 +118,4 @@ rapport (local) par la moyenne et la dispersion des incréments.
 - [x] regarder moyenne + dispersion de $X$ et des incréments $\Delta X$
 - [ ] question ouverte : structure fine de $X_t$ (incréments corrélés à $0{,}26$, retour à
   la moyenne très faible) — ne pas sur-conclure avec si peu de données
-- [x] notebook : ACF du niveau remplacée par les stats d'incréments (moyenne, écart-type, corr lag-1, régression $\Delta X$ vs $X$) + figure ACF du niveau comparée à des browniens simulés, à titre indicatif
+- [x] notebook + rapport : finalement ni ACF ni corrélation ; juste un tableau de stats (moyenne, écart-type) sur X et ΔX (choix de Philippe)
