@@ -119,17 +119,8 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
   \label{fig:xt}
 \end{figure}
 
-Sa moyenne empirique vaut environ $-0{,}40$, donc bien négative, ce qui confirme notre hypothèse et referme le raisonnement sur l'équilibre. Le virus part de $X_0 \approx 0$ puis décroît régulièrement jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de se stabiliser en fluctuant. Le scénario est même plus riche qu'un simple décalage constant puisque l'intensité du virus se renforce au cours du temps, étouffant progressivement les prédateurs.
+Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau.
 
-Les incréments $\Delta X_t$ ressemblent à un bruit centré d'amplitude à peu près constante, sans tendance visible. Le virus lui-même paraît donc non stationnaire sur la fenêtre observée alors que ses variations le sont. Pour préciser sa structure nous avons regardé son autocorrélation (figure~\ref{fig:xtacf}).
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.85\textwidth]{virus4_Xt_acf.png}
-  \caption{Autocorrélation empirique de $X_t$ en fonction du décalage.}
-  \label{fig:xtacf}
-\end{figure}
-
-L'autocorrélation décroît lentement et reste forte même à grand décalage, ce qui trahit une mémoire longue plutôt qu'un retour rapide à la moyenne. Cela oriente vers une structure de type marche aléatoire (un mouvement brownien, éventuellement avec dérive) ou vers un processus à retour à la moyenne très lent. Nous n'avons pas encore tranché entre ces deux pistes, et c'est ce que nous chercherons à départager ensuite.
+Pour caractériser ses variations sans trop présumer de leur nature, nous avons simplement regardé la moyenne et la dispersion des incréments $\Delta X_t = X_{t+dt} - X_t$. Ils auraient l'allure d'un bruit centré de faible amplitude, de moyenne de l'ordre de $-3\cdot 10^{-4}$ et d'écart-type de l'ordre de $6\cdot 10^{-3}$. Le virus lui-même paraîtrait donc non stationnaire sur la fenêtre observée alors que ses variations sembleraient l'être. Distinguer plus finement sa structure, par exemple une marche aléatoire d'un retour à la moyenne très lent, demanderait bien plus que ces quelques échantillons et reste pour l'instant une question ouverte.
 
 \end{document}

@@ -88,27 +88,34 @@ loi de $X_t$ isolée.
 
 Reconstruction faite et sauvegardée dans `virus4_Xt.csv` (en-tête `t,X`, 1999 points).
 
-- **Moyenne** $\approx -0{,}40$ (écart-type $\approx 0{,}23$). Négative, comme prédit par
-  l'argument d'équilibre. ✓
-- **$X_t$ vs $t$** : part de $\approx 0$, décroît régulièrement jusque vers $-0{,}6$ vers
-  $t\approx 13$, puis se stabilise en fluctuant. Donc **non stationnaire** sur la fenêtre —
-  l'intensité du virus se renforce au cours du temps, ce qui colle avec l'effondrement
-  progressif des prédateurs.
-- **$\Delta X_t$ vs $t$** : bruit centré, amplitude à peu près constante ($\sim\pm0{,}02$),
-  pas de tendance. Les incréments, eux, ont l'air stationnaires.
-- **Autocorrélation** : décroissance **lente et quasi linéaire** (encore $\approx 0{,}2$ au
-  décalage $7{,}5$). Signature de mémoire longue / marche aléatoire, pas d'un retour rapide
-  à la moyenne.
+Avec **2000 points et une seule trajectoire**, on ne conclut rien, on intuite des tendances.
 
-Lecture : ça penche vers une **structure de type brownien** (marche aléatoire, peut-être
-avec dérive) plutôt qu'un OU à retour rapide. Un OU à retour très lent reste possible (son
-ACF $e^{-\theta\,\Delta t}$ avec $\theta$ petit ressemble aussi à une droite). Pas encore
-tranché.
+- **Niveau** : moyenne$(X) \approx -0{,}40$, écart-type $\approx 0{,}23$. Négatif, va dans le
+  sens de $\mu < 0$ (prudent, la moyenne mélange la descente et le plateau).
+- **$X_t$ vs $t$** : semblerait partir de $\approx 0$, descendre vers $-0{,}6$ vers
+  $t\approx 13$, puis fluctuer. Pas stationnaire sur la fenêtre.
+- **Incréments $\Delta X$** : moyenne $\approx -3\cdot10^{-4}$ (dérive par pas quasi nulle),
+  écart-type $\approx 6{,}4\cdot10^{-3}$.
+
+**Correction de ma sur-interprétation précédente.** L'« autocorrélation » que j'avais tracée
+était l'ACF du *niveau* $X_t$, qui n'est pas stationnaire : sa décroissance lente reflète
+surtout la tendance, pas une vraie mémoire. À jeter. Plus honnête : regarder les incréments.
+
+- corr$(\Delta X_i, \Delta X_{i-1}) \approx 0{,}26$ → **incréments non indépendants**, donc
+  pas un brownien propre (qui les aurait décorrélés).
+- régression $\Delta X_i$ sur $X_i$ : pente $\approx -0{,}001$, soit $\theta\,dt$ minuscule
+  ($\theta \approx 0{,}07$) → retour à la moyenne **quasi inexistant**, donc pas un OU franc
+  non plus.
+
+Bilan honnête : ni brownien net ni OU net. On reste sur « tendance à dériver vers un niveau
+négatif », sans trancher la structure fine. Le bloc autocorrélation est remplacé dans le
+rapport (local) par la moyenne et la dispersion des incréments.
 
 ### Statut
 
-- [x] reconstruire $X_t$ dans le notebook (fait dans le notebook **propre**, poussé sur main)
-- [x] regarder les trois diagnostics ($X_t$, $\Delta X_t$, ACF + moyenne)
-- [x] vérifier le signe de $\mu$ → négatif, conforme
-- [ ] décider brownien (avec dérive ?) vs OU lent — prochaine étape : régression
-  $\Delta X_i$ sur $X_i$ et/ou croissance de la variance
+- [x] reconstruire $X_t$ (dans le notebook propre, poussé sur main)
+- [x] vérifier le signe de $\mu$ → négatif, conforme (prudemment)
+- [x] regarder moyenne + dispersion de $X$ et des incréments $\Delta X$
+- [ ] question ouverte : structure fine de $X_t$ (incréments corrélés à $0{,}26$, retour à
+  la moyenne très faible) — ne pas sur-conclure avec si peu de données
+- [ ] décider si on garde l'ACF dans le notebook ou si on la remplace par les stats d'incréments
