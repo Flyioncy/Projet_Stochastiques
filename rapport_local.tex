@@ -157,24 +157,43 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Il reste à les mettre à l'épreuve.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit. Nous testons directement $X_t$ car un modèle qui le reproduit reproduira aussi les populations.
 
-\subsection*{Validation des candidats par simulation}
+\subsection*{Test de l'Ornstein-Uhlenbeck}
 
-Pour départager les deux candidats, nous estimons les constantes de chaque modèle, nous en simulons des trajectoires de $X_t$, puis nous comparons par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit. Si un modèle décrit bien le virus, ses simulations doivent suivre la même loi et le test ne doit pas conduire à l'écarter. Nous travaillons directement sur $X_t$ car un modèle qui reproduit le virus reproduira aussi les populations qui en découlent.
-
-\paragraph{Estimation des constantes.} Les constantes se lisent sur les différences $\Delta X_i = X_{i+1} - X_i$. En discrétisant l'Ornstein-Uhlenbeck $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$, on obtient
+L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En le discrétisant, on obtient
 
 \begin{equation}\label{eq:ou-disc}
   \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
 \end{equation}
 
-soit une relation linéaire entre $\Delta X_i$ et $X_i$. Une régression donne alors $\theta$ par la pente, $\mu$ par l'ordonnée à l'origine et $\sigma$ par l'écart-type des résidus, ce qui donne $\theta\approx0{,}07$, $\mu\approx-0{,}66$ et $\sigma\approx0{,}05$. Pour le brownien avec dérive $dX_t = \nu\,dt + \sigma\,dB_t$, la moyenne et l'écart-type des différences donnent directement $\nu = \overline{\Delta X}/dt \approx -0{,}02$ et $\sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05$.
+une relation linéaire entre $\Delta X_i$ et $X_i$. En faisant la régression linéaire de $\Delta X_i$ sur $X_i$, on trouve :
 
-\paragraph{Simulation.} Nous simulons ces modèles à la manière du cours. On tire d'abord un mouvement brownien standard comme la somme cumulée d'incréments gaussiens indépendants de variance $dt$, puis on en déduit chaque trajectoire, par $X_t = \nu t + \sigma B_t$ pour la dérive et par un schéma d'Euler-Maruyama pour l'Ornstein-Uhlenbeck.
+\begin{center}
+  $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
+\end{center}
 
-\paragraph{Test.} Pour chaque modèle nous répétons la simulation un grand nombre de fois et nous relevons la p-value du test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit. La p-value moyenne vaut environ $3\cdot10^{-10}$ pour l'Ornstein-Uhlenbeck et $8\cdot10^{-15}$ pour le brownien avec dérive, très en dessous du seuil usuel de $0{,}05$.
+On simule alors $X_t$ par sa solution exacte $X_t = \mu\,(1-e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s$, où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien. Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-7}$ sur de nombreuses simulations, très en dessous de $0{,}05$. À priori l'Ornstein-Uhlenbeck n'est pas retenu.
 
-À priori, ni l'Ornstein-Uhlenbeck ni le brownien avec dérive ne sont retenus. Ce résultat rejoint le fait que les différences ne sont pas gaussiennes, alors que ces deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
+\subsection*{Test du brownien avec dérive}
+
+Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$. Ses constantes se lisent directement sur la moyenne et l'écart-type des différences,
+
+\begin{center}
+  $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
+\end{center}
+
+On simule $X_t = \nu\,t + \sigma\,B_t$ à partir du même brownien. Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-9}$, là encore très en dessous de $0{,}05$. À priori le brownien avec dérive n'est pas retenu.
+
+\subsection*{Bilan}
+
+Les deux candidats sont donc écartés. La figure~\ref{fig:xmean} éclaire ce rejet. La trajectoire moyenne des simulations suit la descente du virus reconstruit, donc les deux modèles capturent bien la tendance, mais le test porte sur la loi de $X_t$ et pas seulement sur sa moyenne. Ce rejet rejoint le fait que les différences ne sont pas gaussiennes, alors que les deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{virus4_Xmean.png}
+  \caption{Trajectoire moyenne des simulations de $X_t$ pour chaque modèle, comparée au virus reconstruit. La moyenne suit la tendance, alors que le test de Kolmogorov-Smirnov porte sur la loi complète.}
+  \label{fig:xmean}
+\end{figure}
 
 \end{document}
