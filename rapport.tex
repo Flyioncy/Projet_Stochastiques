@@ -98,7 +98,7 @@ Intéressons-nous maintenant directement à $X_t$. En supposant que le virus adm
 
 Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $\mu$ négative.
 
-Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par l'incrément $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
+Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
 \begin{equation}\label{eq:disc}
   V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.
@@ -110,29 +110,54 @@ Tous les autres termes étant connus, il ne reste qu'à isoler le virus.
   X_{i-1} \approx \frac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}.
 \end{equation}
 
-Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma, sans aucune hypothèse de modèle. La figure~\ref{fig:xt} montre le virus reconstruit et ses incréments, et le tableau~\ref{tab:stats} en résume les statistiques.
+Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inverser le schéma, sans aucune hypothèse de modèle. La figure~\ref{fig:xt} montre le virus reconstruit et ses différences.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.9\textwidth]{virus4_Xt.png}
-  \caption{En haut, le virus reconstruit $X_t$ (la moyenne empirique est en tirets). En bas, ses incréments $\Delta X_t = X_{t+dt} - X_t$.}
+  \caption{En haut, le virus reconstruit $X_t$, de moyenne empirique $\approx -0{,}40$ et d'écart-type $\approx 0{,}23$. En bas, ses différences $\Delta X_t = X_{t+dt} - X_t$.}
   \label{fig:xt}
 \end{figure}
 
+La moyenne observée semble cohérente avec notre prédiction précédente. En revanche, le graphe des différences ne nous apprend pas grand-chose à lui seul.
+
+\subsection*{Loi des différences}
+
+Dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.75\textwidth]{virus4_dXt_hist.png}
+  \caption{Distribution des différences $\Delta X_t$ comparée à une loi normale de mêmes moyenne et écart-type. La forme est plus piquée et à queues plus lourdes qu'une gaussienne.}
+  \label{fig:hist}
+\end{figure}
+
+Un test de Kolmogorov-Smirnov, dont seule la p-value nous intéresse comme en cours et en TP, donne ici une valeur de l'ordre de $6\cdot10^{-14}$. Il est dès lors vraisemblablement plausible de ne pas retenir l'hypothèse de normalité des différences. Un seul test ne suffit cependant pas à trancher, surtout sur un jeu de données unique et restreint, et nous formulons donc cette conclusion avec prudence.
+
+\subsection*{Un modèle du cours pour $X_t$ ?}
+
+Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence dans notre cas. Le tableau~\ref{tab:modeles} les reprend, avec pour chacun la raison de le retenir ou de l'écarter.
+
 \begin{table}[ht]
   \centering
-  \begin{tabular}{lcc}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llcl}
     \hline
-     & moyenne & écart-type \\
+    Modèle & Caractéristiques & Retenu & Justification \\
     \hline
-    $X_t$ & $-0{,}40$ & $0{,}23$ \\
-    $\Delta X_t$ & $-3\cdot 10^{-4}$ & $6\cdot 10^{-3}$ \\
+    Brownien avec dérive & tendance linéaire & $\times$ & ne plafonne pas \\
+    Brownien géométrique  & reste de signe constant & $\times$ & $X_t$ devient négatif \\
+    Pont brownien & épinglé aux deux bords & $\times$ & $X_t$ ne revient pas au départ \\
+    Brownien intégral & trajectoire très lisse & $\times$ & différences trop bruitées \\
+    Ornstein-Uhlenbeck & retour à la moyenne & $\checkmark$ & relaxation vers un niveau négatif \\
+    Verhulst (logistique) & saturation, population positive & $\times$ & virus négatif mal décrit \\
     \hline
-  \end{tabular}
-  \caption{Moyenne et écart-type empiriques du virus reconstruit $X_t$ et de ses incréments $\Delta X_t$.}
-  \label{tab:stats}
+  \end{tabular}%
+  }
+  \caption{Modèles vus en cours et leur pertinence pour $(X_t)$, dans l'ordre chronologique du cours.}
+  \label{tab:modeles}
 \end{table}
 
-Sa moyenne empirique vaut environ $-0{,}40$, donc négative, ce qui irait dans le sens de notre hypothèse sur l'équilibre. Avec une seule trajectoire de $2000$ points il faut toutefois rester prudent et se contenter de dégager des tendances. Le virus semblerait partir de $X_0 \approx 0$ puis décroître jusque vers $-0{,}6$ aux alentours de $t \approx 13$ avant de fluctuer autour de ce niveau. Ses incréments $\Delta X_t = X_{t+dt} - X_t$ ont une moyenne quasi nulle et un faible écart-type, ce qui leur donne l'allure d'un bruit centré de petite amplitude.
+Le seul candidat que nous retenons est l'Ornstein-Uhlenbeck, dans sa version transitoire puisque le virus part de $0$ et semble encore relaxer vers son niveau d'équilibre négatif. Sa version stationnaire est moins crédible ici. Au vu du test précédent et de l'unique trajectoire de $2000$ points dont nous disposons, nous le voyons toutefois comme une piste à confirmer plutôt que comme une certitude.
 
 \end{document}
