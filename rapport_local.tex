@@ -173,27 +173,40 @@ une relation linéaire entre $\Delta X_i$ et $X_i$. En faisant la régression li
   $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
 \end{center}
 
-On simule alors $X_t$ par sa solution exacte $X_t = \mu\,(1-e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s$, où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien. Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-7}$ sur de nombreuses simulations, très en dessous de $0{,}05$. À priori l'Ornstein-Uhlenbeck n'est pas retenu.
+Pour simuler le processus, on utilise sa solution exacte. En appliquant le calcul d'Itô à $e^{\theta t}(X_t - \mu)$, qui est linéaire en $X_t$ et n'a donc pas de terme du second ordre, on obtient
+
+\begin{equation}\label{eq:ou-ito}
+  d\!\left[e^{\theta t}(X_t-\mu)\right] = \theta\,e^{\theta t}(X_t-\mu)\,dt + e^{\theta t}\,dX_t = \sigma\,e^{\theta t}\,dB_t.
+\end{equation}
+
+En intégrant entre $0$ et $t$ avec $X_0 = 0$, il vient
+
+\begin{equation}\label{eq:ou-sol}
+  X_t = \mu\,(1 - e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s,
+\end{equation}
+
+où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien.
+
+Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-7}$ sur de nombreuses simulations.
+
+Cette p-value est très inférieure à $0{,}05$. À priori, l'Ornstein-Uhlenbeck n'est pas retenu.
 
 \subsection*{Test du brownien avec dérive}
 
-Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$. Ses constantes se lisent directement sur la moyenne et l'écart-type des différences,
+Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$, de sorte que la moyenne et l'écart-type des différences donnent
 
 \begin{center}
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
 \end{center}
 
-On simule $X_t = \nu\,t + \sigma\,B_t$ à partir du même brownien. Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-9}$, là encore très en dessous de $0{,}05$. À priori le brownien avec dérive n'est pas retenu.
+On simule $X_t = \nu\,t + \sigma\,B_t$ à partir du même brownien.
+
+Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-9}$.
+
+Cette p-value est elle aussi très inférieure à $0{,}05$. À priori, le brownien avec dérive n'est pas retenu.
 
 \subsection*{Bilan}
 
-Les deux candidats sont donc écartés. La figure~\ref{fig:xmean} éclaire ce rejet. La trajectoire moyenne des simulations suit la descente du virus reconstruit, donc les deux modèles capturent bien la tendance, mais le test porte sur la loi de $X_t$ et pas seulement sur sa moyenne. Ce rejet rejoint le fait que les différences ne sont pas gaussiennes, alors que les deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.85\textwidth]{virus4_Xmean.png}
-  \caption{Trajectoire moyenne des simulations de $X_t$ pour chaque modèle, comparée au virus reconstruit. La moyenne suit la tendance, alors que le test de Kolmogorov-Smirnov porte sur la loi complète.}
-  \label{fig:xmean}
-\end{figure}
+Les deux candidats sont donc écartés. Ce rejet rejoint le fait que les différences ne sont pas gaussiennes, alors que les deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
 
 \end{document}
