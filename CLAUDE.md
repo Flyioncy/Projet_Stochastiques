@@ -101,6 +101,7 @@ Sur le ton et la ponctuation :
 - On ne justifie rien par « comme en cours » ou « à la manière du cours », le correcteur connaît déjà le contenu du cours.
 - On n'énonce pas un résultat mathématique sans le justifier. S'il n'est pas dans le cours, on le redémontre proprement, le plus souvent via le calcul d'Itô.
 - La conclusion d'un test est séparée du calcul. On donne d'abord la p-value, puis à part le verdict (modèle retenu ou non).
+- La phrase de conclusion d'un test (hypothèse retenue ou non) est mise en gras avec `\textbf{...}`, pour la détacher du calcul.
 - On ne juge pas un modèle sur sa seule moyenne. Ce qu'on cherche à capturer, c'est la loi du processus (le bruit), donc on teste la distribution.
 
 ---
