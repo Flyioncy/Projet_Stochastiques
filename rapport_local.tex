@@ -114,21 +114,22 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{virus4_Xt.png}
+  \includegraphics[width=0.8\textwidth]{virus4_Xt.png}
   \caption{En haut, le virus reconstruit $X_t$, de moyenne empirique $\approx -0{,}40$ et d'écart-type $\approx 0{,}23$. En bas, ses différences $\Delta X_t = X_{t+dt} - X_t$.}
   \label{fig:xt}
 \end{figure}
 
 La moyenne observée semble cohérente avec notre prédiction précédente. En revanche, le graphe des différences ne nous apprend pas grand-chose à lui seul.
 
-Dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
-
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
-  \includegraphics[width=0.75\textwidth]{virus4_dXt_hist.png}
+  \includegraphics[width=0.65\textwidth]{virus4_dXt_hist.png}
   \caption{Distribution des différences $\Delta X_t$ comparée à une loi normale de mêmes moyenne et écart-type. La forme est plus piquée et à queues plus lourdes qu'une gaussienne.}
   \label{fig:hist}
 \end{figure}
+
+Toutefois, dans les processus stochastiques, les différences jouent un rôle central, et une première idée naturelle est de vérifier si elles sont gaussiennes. La distribution observée s'écarte nettement de la loi normale calée sur la moyenne et l'écart-type empiriques des différences.
+
 
 Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$. À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.
 
