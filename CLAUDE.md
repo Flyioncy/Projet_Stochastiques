@@ -95,9 +95,21 @@ Sur le ton et la ponctuation :
 
 ---
 
-## Calcul stochastique — méthode de calcul différentiel (cours 6 et 7)
+## Calcul stochastique — discrétisation et calcul différentiel (cours 4, 6 et 7)
 
-Pour manipuler les EDS et calculer des différentielles, on suit le **calcul « différentiel » d'Itô** du cours (chapitre 5), qui retrouve les résultats « en raisonnant par approximations comme en physique ». Ce ne sont pas des démonstrations (la version rigoureuse est la formule d'Itô), mais les résultats sont corrects et la méthode est rapide.
+Deux outils complémentaires, tous deux « à la physicienne ». Par défaut, pour passer d'une EDS à un schéma numérique ou pour estimer une quantité à partir des données, on **discrétise directement** (cours 4) — c'est le plus simple, surtout quand l'équation n'a pas de terme brownien. On ne sort le **calcul différentiel d'Itô** (cours 6 et 7) que lorsqu'on doit manipuler analytiquement une fonction d'un processus qui, lui, contient un $dB_t$.
+
+### Discrétisation directe (cours 4)
+
+On approche les différentielles par leurs incréments sur un pas $dt$ (noté aussi $\Delta t$) :
+
+$$dX_t \;\rightsquigarrow\; X_i - X_{i-1}, \qquad dt \;\rightsquigarrow\; dt, \qquad dB_t \;\rightsquigarrow\; B_i - B_{i-1} \sim \mathcal{N}(0, dt),$$
+
+et on évalue le membre de droite au début du pas. Exemple du cours sur $dP_t = \mu\,dt + \sigma\,dB_t$ : on écrit $\frac{P_{i}-P_{i-1}}{P_{i-1}} = \mu\,dt + \sigma\,(B_i - B_{i-1})$. Cette même discrétisation sert dans les deux sens : pour **simuler** une EDS (schéma d'Euler / Euler-Maruyama), et pour **estimer** une quantité inconnue en inversant le schéma à partir des données (c'est ainsi qu'on récupère $dt$, puis qu'on reconstruit $X_t$).
+
+### Calcul différentiel d'Itô (cours 6 et 7)
+
+Quand il y a un terme brownien, on suit le **calcul « différentiel » d'Itô** du cours (chapitre 5), qui retrouve les résultats « en raisonnant par approximations comme en physique ». Ce ne sont pas des démonstrations (la version rigoureuse est la formule d'Itô), mais les résultats sont corrects et la méthode est rapide.
 
 **Notation différentielle.** Un processus d'Itô s'écrit $dX_t = U_t\,dt + V_t\,dB_t$ (dérive $U_t\,dt$ + partie brownienne $V_t\,dB_t$). Cette écriture n'est qu'une traduction de la forme intégrale, pas un objet à part entière.
 
