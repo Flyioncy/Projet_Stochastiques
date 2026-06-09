@@ -119,3 +119,40 @@ rapport (local) par la moyenne et la dispersion des incréments.
 - [ ] question ouverte : structure fine de $X_t$ (incréments corrélés à $0{,}26$, retour à
   la moyenne très faible) — ne pas sur-conclure avec si peu de données
 - [x] notebook + rapport : finalement ni ACF ni corrélation ; juste un tableau de stats (moyenne, écart-type) sur X et ΔX (choix de Philippe)
+
+---
+
+## Idée 2 — Passer en revue les modèles du cours
+
+**Échelle de bruit adaptée.** L'écart-type brut de $\Delta X$ ($\approx 6\cdot10^{-3}$) est petit
+surtout parce que $dt$ l'est. L'échelle indépendante de $dt$ est le coefficient de diffusion
+$$\sigma = \frac{\text{écart-type}(\Delta X)}{\sqrt{dt}} \approx 0{,}052,$$
+car pour $dX = \dots + \sigma\,dB$ les incréments ont un écart-type $\sigma\sqrt{dt}$. C'est ce
+$\sigma$ qu'on affichera plutôt que l'écart-type brut.
+
+**Revue des modèles** (pour $X_t$ : part de $\approx 0$, descend vers $\approx -0{,}6$, plafonne, passe sous 0).
+
+| Modèle | Trait | Verdict |
+|---|---|---|
+| Brownien géométrique / Black-Scholes | $dX=\mu X\,dt+\sigma X\,dB$, reste $>0$ | écarté (X passe sous 0, min $-0{,}71$) |
+| Pont brownien | épinglé aux deux bords | écarté (X ne revient pas au départ) |
+| Brownien intégral $\int B\,ds$ | très lisse ($C^1$) | écarté (incréments bruités) |
+| Verhulst (logistique) | saturation vers $K$, populations $>0$ | douteux (cadre positif mal adapté) |
+| Brownien avec dérive | $X=\mu t+\sigma B$, sans borne | douteux (X plafonne, une dérive non) |
+| Ornstein-Uhlenbeck | retour à la moyenne vers $\mu$ | candidat principal ($0\to\mu\approx-0{,}66$) |
+| OU stationnaire | déjà dans $\mathcal N(\mu,\sigma^2/2\theta)$ | douteux ($X_0$ loin de $\mu$, régime transitoire) |
+
+**Tests (candidats douteux)** :
+- retour à la moyenne : régression $\Delta X$ sur $X$ → $\theta\approx0{,}069$, $\mu\approx-0{,}66$ (rappel faible, léger + pour l'OU) ;
+- variance : $\mathrm{Var}(X_{[:n]})$ de $0{,}001$ à $0{,}05$ puis sature → plutôt OU, mais contaminé par la descente ;
+- gaussianité des incréments : asymétrie $\approx0$, kurtosis en excès $\approx3{,}3$ (queues épaisses) → ni OU ni brownien gaussien parfait.
+
+**Bilan** : on écarte proprement GBM/Black-Scholes, pont brownien, brownien intégral. OU
+transitoire = meilleur candidat, dérive = alternative faible, Verhulst peu naturel. Pas de
+tranchage ferme (queues épaisses, une seule trajectoire de 2000 points).
+
+### À faire (Idée 2)
+- [ ] rapport : remplacer l'écart-type brut de $\Delta X$ par $\sigma = \text{std}(\Delta X)/\sqrt{dt}$ dans le tableau
+- [ ] rapport : brève sous-section « Quel modèle pour $X_t$ ? » avec le tableau de revue
+- [ ] notebook : figure de gaussianité des incréments (histogramme vs densité normale)
+- [ ] décider avec Philippe ce qui part sur le rapport propre
