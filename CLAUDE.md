@@ -170,12 +170,20 @@ Projet_Stochastiques/
 ├── Projet.pdf         # Sujet officiel
 ├── virus4.csv         # Données premier modèle
 ├── virus6.csv         # Données deuxième modèle
+├── virus4_Xt.csv      # Virus X_t reconstruit pour le modèle 1 (généré par le notebook)
 ├── rapport.tex        # Source LaTeX du rapport (livrable propre)
 ├── rapport_local.tex  # Brouillon de travail (par branche, jamais sur main)
 ├── notebook.ipynb     # Jupyter notebook principal (livrable propre)
 ├── notebook_local.ipynb # Brouillon de travail (par branche, jamais sur main)
 └── figures/           # Figures générées par le notebook
 ```
+
+---
+
+## Données et artefacts partagés
+
+- `virus4.csv`, `virus6.csv` : données brutes fournies (sans en-tête, colonnes $V$ puis $P$).
+- `virus4_Xt.csv` : **virus reconstruit** $X_t$ pour le **premier modèle** (`virus4.csv`), généré par le notebook. On l'obtient en discrétisant l'équation des proies, qui n'a pas de terme brownien, et en isolant $X_{i-1} \approx \tfrac{V_i - V_{i-1}}{V_{i-1}\,dt} - \tfrac{2}{3} + \tfrac{4}{3}P_{i-1}$. La reconstruction est **déterministe** (simple inversion du schéma, aucune hypothèse de modèle) ; le fichier a un en-tête `t,X` et sert de point de départ commun pour modéliser $(X_t)$. Le modèle 2 (`virus6.csv`) donnera lieu à son propre fichier le moment venu.
 
 ---
 

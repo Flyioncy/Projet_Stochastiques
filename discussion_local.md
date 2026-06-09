@@ -85,9 +85,31 @@ Une fois le modèle de $X_t$ choisi et estimé, on simule des trajectoires
 reproduit l'effondrement des prédateurs et la perte de périodicité — pas seulement la
 loi de $X_t$ isolée.
 
+### Observations (manip faite dans le notebook propre)
+
+Reconstruction faite et sauvegardée dans `virus4_Xt.csv` (en-tête `t,X`, 1999 points).
+
+- **Moyenne** $\approx -0{,}40$ (écart-type $\approx 0{,}23$). Négative, comme prédit par
+  l'argument d'équilibre. ✓
+- **$X_t$ vs $t$** : part de $\approx 0$, décroît régulièrement jusque vers $-0{,}6$ vers
+  $t\approx 13$, puis se stabilise en fluctuant. Donc **non stationnaire** sur la fenêtre —
+  l'intensité du virus se renforce au cours du temps, ce qui colle avec l'effondrement
+  progressif des prédateurs.
+- **$\Delta X_t$ vs $t$** : bruit centré, amplitude à peu près constante ($\sim\pm0{,}02$),
+  pas de tendance. Les incréments, eux, ont l'air stationnaires.
+- **Autocorrélation** : décroissance **lente et quasi linéaire** (encore $\approx 0{,}2$ au
+  décalage $7{,}5$). Signature de mémoire longue / marche aléatoire, pas d'un retour rapide
+  à la moyenne.
+
+Lecture : ça penche vers une **structure de type brownien** (marche aléatoire, peut-être
+avec dérive) plutôt qu'un OU à retour rapide. Un OU à retour très lent reste possible (son
+ACF $e^{-\theta\,\Delta t}$ avec $\theta$ petit ressemble aussi à une droite). Pas encore
+tranché.
+
 ### Statut
 
-- [ ] reconstruire $X_t$ dans `notebook_local.ipynb`
-- [ ] regarder les trois diagnostics
-- [ ] vérifier le signe de $\mu$
-- [ ] décider brownien vs OU
+- [x] reconstruire $X_t$ dans le notebook (fait dans le notebook **propre**, poussé sur main)
+- [x] regarder les trois diagnostics ($X_t$, $\Delta X_t$, ACF + moyenne)
+- [x] vérifier le signe de $\mu$ → négatif, conforme
+- [ ] décider brownien (avec dérive ?) vs OU lent — prochaine étape : régression
+  $\Delta X_i$ sur $X_i$ et/ou croissance de la variance
