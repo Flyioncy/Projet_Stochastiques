@@ -238,3 +238,48 @@ Le modèle de $X$ sert à simuler $(V,P)$ et à étudier l'extinction. Test comp
 ### Conséquence pour nos rapports
 
 Le test sur les niveaux (rapport principal) et le `ks_2samp` sur incréments (cette note) sont à refaire dans ce cadre : KS à un échantillon des **résidus** $+$ autocorrélation, et p-value calibrée par bootstrap si l'on garde une distance. À décider avec Philippe avant de toucher aux rapports.
+
+---
+
+## Idée 4 bis — Précisions (questions de Philippe)
+
+### « Es-tu déjà sous l'hypothèse d'un OU ? » → oui, et c'est voulu
+
+Le test des résidus **dépend du modèle qu'on teste**. On en teste un à la fois (un par sous-section). Pour fabriquer un résidu il faut connaître la dérive $a(X)$ et la diffusion $b(X)$ du modèle, donc on est forcément « sous » une hypothèse précise.
+
+- dérive : $a(X)\,dt = \nu\,dt$, $b = \sigma$ ;
+- OU : $a(X)\,dt = \theta(\mu - X)\,dt$, $b = \sigma$.
+
+Le résidu, c'est la part de $\Delta X_i$ que le modèle **n'explique pas**, ramenée à l'échelle du bruit. Le construire, c'est déjà supposer le modèle ; le tester, c'est tester ce modèle-là.
+
+### « Pourquoi comparer les résidus à une $\mathcal N(0,1)$ ? » → la normale n'est pas un choix, elle est imposée
+
+Le modèle discret s'écrit
+$$\Delta X_i = a(X_i)\,dt + b(X_i)\,\Delta B_i, \qquad \Delta B_i = B_{t_{i+1}} - B_{t_i}.$$
+
+Par **définition** du mouvement brownien, ses incréments valent $\Delta B_i \sim \mathcal N(0, dt)$, indépendants. C'est l'hypothèse brownienne elle-même, pas une hypothèse en plus. En isolant le bruit et en le ramenant à l'échelle $\sqrt{dt}$,
+$$\varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{b(X_i)\,\sqrt{dt}} = \frac{\Delta B_i}{\sqrt{dt}} \sim \mathcal N(0,1), \quad \text{i.i.d.}$$
+
+Le « $0$ » et le « $1$ » ne sont donc pas arbitraires : c'est $\mathcal N(0,dt)$ standardisée par $\sqrt{dt}$. Si le vrai bruit du virus n'est pas gaussien (ou pas indépendant), les $\varepsilon_i$ ne seront pas des $\mathcal N(0,1)$ i.i.d., et c'est exactement ce qu'on veut détecter.
+
+### « En quoi ça confirme le modèle ? » → ça ne confirme rien, ça échoue (ou non) à le rejeter
+
+Un test ne valide jamais. Ici on confronte les **deux** affirmations du bruit brownien, séparément.
+
+1. **Indépendance** : l'autocorrélation des $\varepsilon_i$ doit être $\approx 0$. Si acf$_1 \approx 0{,}26$, le bruit blanc tombe et le modèle n'est pas retenu, sans même regarder la loi.
+2. **Loi** : si l'indépendance tient, KS **à un échantillon** des $\varepsilon_i$ contre $\mathcal N(0,1)$. Une p-value faible $\to$ on ne retient pas ; une p-value qui n'est pas faible $\to$ rien ne s'oppose au modèle.
+
+C'est le KS de goodness-of-fit qu'on connaît, mais appliqué au **bon objet** : un seul échantillon (les résidus) comparé à une loi **fixée d'avance** $\mathcal N(0,1)$, et non deux trajectoires aléatoires l'une contre l'autre. C'est là toute la différence avec le `ks_2samp` cassé — sous le modèle, les $\varepsilon_i$ sont réellement i.i.d., donc les hypothèses du KS sont satisfaites et sa p-value veut dire quelque chose.
+
+Au passage, cela redonne proprement mon résultat de coarse-graining : au pas natif les résidus sont corrélés (0,26) et à queues lourdes $\to$ OU non retenu ; au pas grossier ils sont décorrélés et gaussiens (KS un échantillon $p \approx 0{,}84$) $\to$ OU non rejeté. Même conclusion, mais sur une base correcte.
+
+### Test 2 → je le retire
+
+J'avais proposé de **calibrer la distance $D$** du KS par simulation. Tu as raison de rappeler qu'on ne parle pas de $D$ : ce test reposait entièrement sur $D$ comme statistique, donc **je l'abandonne**. Le seul KS qu'on garde est celui du test 1 (un échantillon sur les résidus), dont on ne lit que la **p-value**. Si un jour on veut une p-value pour l'indépendance, on calibrerait par simulation une grandeur **interprétable** (l'autocorrélation des résidus), jamais $D$ — mais l'inspection directe de l'autocorrélation suffit déjà.
+
+### Bilan du protocole
+
+Deux tests, complémentaires, sans $D$ ni `ks_2samp` entre trajectoires.
+
+- **(A) sur le bruit** : résidus du modèle $\to$ autocorrélation $\approx 0$ (indépendance) puis KS à un échantillon contre $\mathcal N(0,1)$ (loi). On ne lit que la p-value.
+- **(B) sur le phénomène** : injecter $X$ simulé dans $(V,P)$ et vérifier par Monte-Carlo que l'effondrement des prédateurs, le plateau et les probabilités d'extinction sont reproduits.
