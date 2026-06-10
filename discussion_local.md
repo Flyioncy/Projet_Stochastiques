@@ -190,3 +190,51 @@ Piste plausible trouvée : **OU au pas grossier**. Limites honnêtes : écart-ty
 - [x] rapport séparé `rapport_recherche_local.tex` + notebook `notebook_recherche_local.ipynb` + figures `figures_local/`
 - [x] piste avec mean-p $> 0{,}05$ (OU au pas grossier)
 - [ ] à voir avec Philippe : merge dans le rapport principal ? creuser la tendance logistique en S ?
+
+---
+
+## Idée 4 — Comment tester proprement une hypothèse de modèle
+
+Philippe a raison : un `ks_2samp` entre deux trajectoires n'a pas de sens. Je reprends la méthodo à zéro, sans m'appuyer sur le passage de `CLAUDE.md`.
+
+### Pourquoi comparer deux trajectoires est faux
+
+Un test à deux échantillons (KS) répond à « ces deux **échantillons i.i.d.** viennent-ils de la même loi ? ». Or les valeurs d'une trajectoire ne sont pas i.i.d. : c'est une série temporelle **autocorrélée**. Trois conséquences.
+
+- « La loi des niveaux d'une trajectoire » est un objet qui dépend du chemin tiré, pas l'estimation d'une loi fixe. Si le processus n'est même pas stationnaire (notre cas, à cause de la descente), il n'existe pas de loi marginale unique à comparer.
+- L'hypothèse d'indépendance de KS est violée, donc la p-value analytique qu'il renvoie est fausse : il sur-rejette. C'est exactement ce que j'ai vu, deux tirages du **même** modèle donnant déjà mean-p $\approx 10^{-6}$. Un test qui rejette le vrai modèle ne teste rien.
+- En triant les valeurs pour comparer des CDF, on jette l'ordre temporel, là où vit toute la dynamique.
+
+### Ce qu'un modèle affirme réellement
+
+Une EDS $dX_t = a(X_t)\,dt + b(X_t)\,dB_t$ ne dit qu'une chose testable : une fois la dérive retirée, le **bruit est i.i.d. de loi connue**. En discret, les résidus standardisés
+$$\varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{b(X_i)\,\sqrt{dt}}$$
+sont i.i.d. $\mathcal N(0,1)$ sous le modèle. C'est **là** qu'est l'objet i.i.d. dont un test a besoin, pas dans les niveaux. (Pour l'OU, $a(X_i)\,dt$ est la droite de régression $\theta\mu\,dt-\theta\,dt\,X_i$ et $b=\sigma$ ; pour la dérive, $a\,dt=\nu\,dt$.)
+
+### Le test que je ferais — (1) sur les résidus, le cœur du modèle
+
+1. estimer les paramètres (régression) ;
+2. former les résidus $\varepsilon_i$ ;
+3. tester séparément les **deux** hypothèses du bruit :
+   - **loi** : KS à **un** échantillon de $\varepsilon$ contre $\mathcal N(0,1)$ (`scs.kstest`). Là, la p-value est interprétable car $\varepsilon$ est censé être i.i.d. ;
+   - **indépendance** : l'autocorrélation des $\varepsilon$ doit être $\approx 0$. Si acf$_1 \approx 0{,}26$, l'hypothèse de bruit blanc tombe, indépendamment des queues.
+
+C'est un vrai test : on confronte les deux affirmations du modèle (loi + indépendance du bruit) aux données. Nuance honnête : les paramètres sont estimés sur les mêmes données, donc le KS est un peu optimiste (biais de Lilliefors). À notre échelle on le signale, ou on le corrige par le bootstrap ci-dessous.
+
+### Le test que je ferais — (2) calibrer une statistique par simulation
+
+Si l'on veut juger une statistique $T$ qui capture une caractéristique (kurtosis des incréments, autocorrélation, variance du plateau, ou même une distance KS), la bonne façon d'avoir une p-value est de construire la **loi de $T$ sous le modèle** (bootstrap paramétrique) :
+
+1. simuler $N$ trajectoires sous le modèle ajusté (même longueur, même $dt$, même $X_0$) ;
+2. calculer $T$ sur chacune $\rightarrow$ loi de $T$ sous $H_0$, qui tient compte de l'autocorrélation et de la taille finie ;
+3. p-value $=$ proportion des $T$ simulés au moins aussi extrêmes que $T_\text{obs}$.
+
+C'est ainsi qu'une distance KS aurait dû servir : non pas lire la p-value analytique de `ks_2samp`, mais situer le $D$ observé (données vs modèle) dans la distribution de $D$ engendrée **sous** le modèle. Mon « sim-vs-sim » était le début de cette calibration ; il manquait juste d'y placer le $D$ observé.
+
+### Le test que je ferais — (3) le modèle reproduit-il le phénomène
+
+Le modèle de $X$ sert à simuler $(V,P)$ et à étudier l'extinction. Test complémentaire de bon sens : injecter $X$ simulé dans le système $(V,P)$ et vérifier par Monte-Carlo que les trajectoires reproduisent les faits observés (effondrement des prédateurs, niveau du plateau, ordre de grandeur des temps et probabilités d'extinction). C'est « le modèle reproduit-il ce qu'on voit », complémentaire du test sur le bruit.
+
+### Conséquence pour nos rapports
+
+Le test sur les niveaux (rapport principal) et le `ks_2samp` sur incréments (cette note) sont à refaire dans ce cadre : KS à un échantillon des **résidus** $+$ autocorrélation, et p-value calibrée par bootstrap si l'on garde une distance. À décider avec Philippe avant de toucher aux rapports.
