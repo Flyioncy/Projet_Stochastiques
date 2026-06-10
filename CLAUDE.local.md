@@ -45,6 +45,16 @@ trajectoires autocorrélées (même sim-vs-sim donne p$\approx$0), mais on s'en 
 l'interprétation simple de la p-value (cours/TP) ; pas de stat annexe ni de Monte-Carlo
 sur une statistique de test.
 
+## Recherche d'un modèle pour $X_t$ (rapport séparé, à merger plus tard)
+
+Fichiers : `rapport_recherche_local.tex`, `notebook_recherche_local.ipynb`, `figures_local/`. Détail dans `discussion_local.md` (Idée 3).
+
+- Le KS **sur les niveaux** est sur-puissant (OU vs lui-même : mean-p $\approx 10^{-6}$) → il n'discrimine pas, on teste la **loi des incréments**.
+- Aucune loi simple ne décrit les incréments natifs (gaussien $10^{-7}$ ; Laplace, mélange normal-Gamma $10^{-3}$) car ils sont à queues lourdes **et** corrélés (acf1 $\approx 0{,}26$) → haute fréquence.
+- **Coarse-graining** (sous-échantillonnage) : la kurtosis et l'autocorrélation s'effondrent (somme → gaussienne). Au pas $dt_k \approx 0{,}045$ : **OU réestimé** $\theta\approx0{,}08$, $\mu\approx-0{,}63$, $\sigma\approx0{,}06$, **KS incréments mean-p $\approx 0{,}70$** (gaussien $\approx 0{,}60$) → piste plausible retenue.
+- Limite : $\sigma/\sqrt{2\theta}\approx0{,}15$ > plateau $0{,}055$ ; descente exp. ≠ forme en S. Piste suivante : tendance logistique ($-X$ monte de 0 à $\approx0{,}58$).
+- Contraintes Philippe : éviter Student et la « dérivée seconde » (autre groupe) ; lois standard L3/M1 (Gamma, Beta, Chi2, Student) OK mais pas de math obscur.
+
 ## Prochaines étapes
 
 - **Soit** proposer un nouveau modèle pour $X_t$ hors cadre gaussien (différences à queues lourdes).

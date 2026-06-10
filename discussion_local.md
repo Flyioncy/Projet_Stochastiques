@@ -156,3 +156,37 @@ tranchage ferme (queues épaisses, une seule trajectoire de 2000 points).
 - [ ] rapport : brève sous-section « Quel modèle pour $X_t$ ? » avec le tableau de revue
 - [ ] notebook : figure de gaussianité des incréments (histogramme vs densité normale)
 - [ ] décider avec Philippe ce qui part sur le rapport propre
+
+---
+
+## Idée 3 — Recherche d'un modèle pour $X_t$ (rapport séparé `rapport_recherche_local.tex`)
+
+Suite du rapport principal, où l'OU et la dérive avaient été écartés par un KS sur les niveaux. On creuse.
+
+### Le test sur les niveaux ne discrimine pas
+
+En comparant une trajectoire d'OU à une autre du **même** OU, le KS sur les niveaux donne une p-value moyenne $\approx 10^{-6}$. Le test écarterait donc même le bon modèle : sur des trajectoires longues et corrélées, il est sur-puissant. Une p-value faible sur les niveaux ne désigne pas un mauvais modèle. On bascule sur la **loi des incréments** $\Delta X$, qui est ce qu'un modèle pour $X_t$ fixe réellement.
+
+### Les incréments natifs ne suivent aucune loi simple
+
+- gaussien : mean-p $\approx 10^{-7}$ (queues lourdes, excès de kurtosis $\approx 3{,}3$) ;
+- Laplace, mélange normal-Gamma (calés sur la kurtosis) : mean-p $\approx 10^{-3}$, mieux mais loin de $0{,}05$ ;
+- en plus des queues, les incréments sont **corrélés** (acf1 $\approx 0{,}26$) → structure de haute fréquence qu'aucune loi i.i.d. ne reproduit. (On évite Student et la « dérivée seconde », pistes déjà prises par un autre groupe.)
+
+### Coarse-graining = la piste qui marche
+
+Si la structure fine est du bruit de haute fréquence (probablement la dérivation discrète de $V$ dans la reconstruction), agréger les incréments doit les gaussianiser (somme → normale) et les décorréler. On sous-échantillonne $X$ un point sur $k$ :
+
+- la kurtosis s'effondre vers $0$, l'autocorrélation aussi ;
+- dès $dt_k \approx 0{,}03$, des incréments **gaussiens** passent le KS (mean-p $> 0{,}05$).
+
+Au pas $dt_k \approx 0{,}045$ ($k=3$) : kurtosis $\approx 0{,}9$, acf $\approx 0$, normalité non écartée (ks_1samp $\approx 0{,}84$). On réestime l'OU à ce pas : $\theta \approx 0{,}08$, $\mu \approx -0{,}63$, $\sigma \approx 0{,}06$. **KS sur les incréments grossiers : OU mean-p $\approx 0{,}70$, gaussien $\approx 0{,}60$** → bien au-dessus de $0{,}05$.
+
+### Bilan et limite
+
+Piste plausible trouvée : **OU au pas grossier**. Limites honnêtes : écart-type stationnaire $\sigma/\sqrt{2\theta} \approx 0{,}15$ vs plateau observé $\approx 0{,}055$ ; descente exponentielle qui n'épouse que grossièrement la forme en S des données. Suite naturelle : une tendance en S (croissance logistique de l'effet du virus, $-X$ qui monte de $0$ à $\approx 0{,}58$).
+
+### Statut (Idée 3)
+- [x] rapport séparé `rapport_recherche_local.tex` + notebook `notebook_recherche_local.ipynb` + figures `figures_local/`
+- [x] piste avec mean-p $> 0{,}05$ (OU au pas grossier)
+- [ ] à voir avec Philippe : merge dans le rapport principal ? creuser la tendance logistique en S ?
