@@ -156,26 +156,17 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous testons chaque modèle séparément. Le principe est le même dans les deux cas. On estime les constantes sur les différences $\Delta X_i = X_{i+1}-X_i$, on simule des trajectoires de $X_t$ à partir d'un mouvement brownien, et on compare par un test de Kolmogorov-Smirnov le $X$ simulé au $X$ reconstruit.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous revenons à ce que chaque modèle affirme. Une équation $dX_t = a(X_t)\,dt + \sigma\,dB_t$ suppose qu'une fois la dérive $a(X_t)\,dt$ retirée il ne reste qu'un bruit brownien. En discrétisant, ses résidus $\varepsilon_i = \Delta X_i - a(X_i)\,dt$ doivent donc être indépendants et suivre une loi normale centrée d'écart-type $\sigma\sqrt{dt}$, puisque les incréments d'un mouvement brownien le sont. Tester un modèle revient alors à confronter ses résidus à ces deux exigences, leur loi et leur indépendance.
 
 \subsection*{Test du brownien avec dérive}
 
-Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne alors $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
+Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
 
 \begin{center}
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
 \end{center}
 
-On simule alors $X_t = \nu\,t + \sigma\,B_t$ à partir d'un mouvement brownien (figure~\ref{fig:sim-derive}).
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{virus4_sim_derive.png}
-  \caption{Trois trajectoires simulées du brownien avec dérive (en gris) et le virus reconstruit.}
-  \label{fig:sim-derive}
-\end{figure}
-
-Le test de Kolmogorov-Smirnov entre le $X$ simulé et le $X$ reconstruit donne une p-value moyenne de l'ordre de $10^{-9}$ sur de nombreuses simulations, largement inférieure à $0{,}05$.
+La dérive étant constante, les résidus $\varepsilon_i = \Delta X_i - \nu\,dt$ ne sont que les différences recentrées. Leur loi est donc celle déjà observée à la figure~\ref{fig:hist}, et un test de Kolmogorov-Smirnov contre la loi normale attendue donne une p-value de l'ordre de $10^{-14}$. Les résidus consécutifs gardent par ailleurs une corrélation de l'ordre de $0{,}26$, loin de l'indépendance d'un bruit brownien.
 
 \textbf{À priori, le brownien avec dérive n'est pas retenu.}
 
@@ -187,39 +178,18 @@ L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En 
   \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
 \end{equation}
 
-une relation linéaire entre $\Delta X_i$ et $X_i$. Sa pente vaut $-\theta\,dt$ et son ordonnée à l'origine $\theta\mu\,dt$, ce qui donne $\theta$ puis $\mu$. Les résidus de la régression valent $\sigma\,\Delta B_i$, d'écart-type $\sigma\sqrt{dt}$, donc $\sigma$ s'obtient en divisant l'écart-type des résidus par $\sqrt{dt}$, comme pour la dérive. On trouve :
+une relation linéaire entre $\Delta X_i$ et $X_i$. Sa pente vaut $-\theta\,dt$ et son ordonnée à l'origine $\theta\mu\,dt$, ce qui donne $\theta$ puis $\mu$, tandis que l'écart-type des résidus de la régression donne $\sigma\sqrt{dt}$. On trouve :
 
 \begin{center}
   $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
 \end{center}
 
-Pour simuler le processus, on utilise sa solution exacte. En appliquant le calcul d'Itô à $e^{\theta t}(X_t - \mu)$, qui est linéaire en $X_t$ et n'a donc pas de terme du second ordre, on obtient
-
-\begin{equation}\label{eq:ou-ito}
-  d\!\left[e^{\theta t}(X_t-\mu)\right] = \theta\,e^{\theta t}(X_t-\mu)\,dt + e^{\theta t}\,dX_t = \sigma\,e^{\theta t}\,dB_t.
-\end{equation}
-
-En intégrant entre $0$ et $t$ avec $X_0 = 0$, il vient
-
-\begin{equation}\label{eq:ou-sol}
-  X_t = \mu\,(1 - e^{-\theta t}) + \sigma\,e^{-\theta t}\int_0^t e^{\theta s}\,dB_s,
-\end{equation}
-
-où l'intégrale d'Itô est approchée par une somme sur les incréments du brownien (figure~\ref{fig:sim-ou}).
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{virus4_sim_ou.png}
-  \caption{Trois trajectoires simulées de l'Ornstein-Uhlenbeck (en gris) et le virus reconstruit.}
-  \label{fig:sim-ou}
-\end{figure}
-
-Le test de Kolmogorov-Smirnov donne une p-value moyenne de l'ordre de $10^{-7}$, elle aussi largement inférieure à $0{,}05$.
+Les résidus $\varepsilon_i = \Delta X_i - \theta(\mu - X_i)\,dt$ devraient former le même bruit brownien. Le terme de rappel retiré étant minime, ils ne s'écartent pas davantage de la normale que ceux de la dérive, avec une p-value du test de Kolmogorov-Smirnov de l'ordre de $10^{-14}$, et ils conservent la même corrélation d'un pas à l'autre, de l'ordre de $0{,}26$.
 
 \textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
 
 \subsection*{Bilan}
 
-Les deux candidats sont donc écartés. Ce rejet rejoint le fait que les différences ne sont pas gaussiennes, alors que les deux modèles reposent sur un bruit gaussien. Le modèle du virus reste donc à trouver.
+Les deux candidats sont écartés pour la même raison. Tous deux reposent sur un bruit brownien, donc sur des résidus gaussiens et indépendants, alors que ceux du virus reconstruit s'écartent nettement d'une loi normale et restent corrélés d'un pas à l'autre. Le modèle du virus reste donc à trouver.
 
 \end{document}
