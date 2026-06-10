@@ -156,17 +156,25 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous revenons à ce que chaque modèle affirme. Une équation $dX_t = a(X_t)\,dt + \sigma\,dB_t$ suppose qu'une fois la dérive $a(X_t)\,dt$ retirée il ne reste qu'un bruit brownien. Son résidu standardisé
+\subsection*{Tester un modèle par ses résidus}
+
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Ils s'écrivent respectivement
+
+\begin{equation}\label{eq:modeles}
+  dX_t = \nu\,dt + \sigma\,dB_t \qquad \text{et} \qquad dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t,
+\end{equation}
+
+et se mettent tous deux sous la forme générale $dX_t = a(X_t)\,dt + \sigma\,dB_t$, où $a(X_t)$ désigne la dérive du modèle, égale à la constante $\nu$ pour le premier et à $\theta(\mu - X_t)$ pour le second. Une fois cette dérive retirée, il ne doit rester qu'un bruit brownien, si bien que le résidu standardisé
 
 \begin{equation}\label{eq:residu}
   \varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{\sigma\sqrt{dt}} = \frac{\Delta B_i}{\sqrt{dt}}
 \end{equation}
 
-n'est alors qu'un incrément de mouvement brownien ramené à l'échelle $\sqrt{dt}$. Comme un tel incrément suit $\mathcal N(0,dt)$, le résidu doit suivre une loi normale centrée réduite $\mathcal N(0,1)$, et les résidus successifs doivent être indépendants. Tester un modèle revient donc à confronter ses résidus à ces deux exigences, leur loi et leur indépendance.
+n'est qu'un incrément de mouvement brownien ramené à l'échelle $\sqrt{dt}$. Comme un tel incrément suit $\mathcal N(0,dt)$, le résidu doit suivre une loi normale centrée réduite $\mathcal N(0,1)$, et les résidus successifs doivent être indépendants. Un modèle pertinent devrait donc d'abord passer ce test des résidus, qui porte sur leur loi et sur leur indépendance.
 
 \subsection*{Test du brownien avec dérive}
 
-Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution immédiate $X_t = \nu\,t + \sigma\,B_t$. En le discrétisant, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
+En discrétisant son équation, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
 
 \begin{center}
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
@@ -187,7 +195,7 @@ Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne une p-value de l'or
 
 \subsection*{Test de l'Ornstein-Uhlenbeck}
 
-L'Ornstein-Uhlenbeck s'écrit $dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t$. En le discrétisant, on obtient
+En discrétisant son équation, on obtient
 
 \begin{equation}\label{eq:ou-disc}
   \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
