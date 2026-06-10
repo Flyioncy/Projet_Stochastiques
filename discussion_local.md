@@ -283,3 +283,28 @@ Deux tests, complémentaires, sans $D$ ni `ks_2samp` entre trajectoires.
 
 - **(A) sur le bruit** : résidus du modèle $\to$ autocorrélation $\approx 0$ (indépendance) puis KS à un échantillon contre $\mathcal N(0,1)$ (loi). On ne lit que la p-value.
 - **(B) sur le phénomène** : injecter $X$ simulé dans $(V,P)$ et vérifier par Monte-Carlo que l'effondrement des prédateurs, le plateau et les probabilités d'extinction sont reproduits.
+
+---
+
+## Idée 4 ter — Précisions (variance des résidus, indépendance, Monte-Carlo sur X)
+
+### Pas besoin de ramener à une variance 1 (Philippe a raison)
+
+Pour l'OU et la dérive, la diffusion $b=\sigma$ est **constante**, donc $r_i = \Delta X_i - a(X_i)\,dt = \sigma\,\Delta B_i \sim \mathcal N(0,\sigma^2 dt)$. Diviser par $\sigma\sqrt{dt}$ n'est qu'un changement d'échelle qui ne touche pas la **forme** : tester que l'histogramme des $r_i$ est gaussien revient au même. La normalisation à $\mathcal N(0,1)$ est seulement cosmétique ici.
+
+Elle ne devient **nécessaire** que si la diffusion dépend de $X$ (brownien géométrique, $b=\sigma X$) : chaque $r_i$ a alors une variance $b(X_i)^2 dt$ différente, et il faut diviser par $b(X_i)\sqrt{dt}$ pour rendre les résidus identiquement distribués avant de les regrouper en un seul histogramme.
+
+### La porte « cohérent » a deux battants
+
+Histogramme gaussien $+$ autocorrélation $\approx 0$. Le premier teste la **loi** du bruit, le second son **indépendance**. Les deux sont nécessaires. Si l'un tombe, le modèle n'est pas retenu ; si les deux tiennent, le modèle est cohérent et on passe au test (B). (Natif : les deux tombent ; pas grossier : les deux tiennent.)
+
+### Monte-Carlo sur les trajectoires de $X$ ? oui, mais plus faible
+
+On peut simuler $N$ trajectoires de $X$ sous le modèle et comparer, mais **sur des caractéristiques interprétables** (niveau du plateau, temps de descente, amplitude), jamais la loi des niveaux (le piège du `ks_2samp`) ni $D$. On situe la valeur observée dans la distribution simulée.
+
+Ce n'est pas équivalent au Monte-Carlo sur $(V,P)$, pour deux raisons.
+
+- $X$ entre dans $dV = V(\tfrac23 - \tfrac43 P + X)\,dt$ et y est **intégré dans le temps**. Deux modèles de $X$ de même loi marginale mais de structure temporelle différente (autocorrélation, calendrier de la descente) donnent des $(V,P)$ très différents. Le test sur $(V,P)$ voit donc le comportement cumulé, pas seulement la marginale de $X$.
+- L'extinction est définie sur $(V,P)$ (densité sous $0{,}01$), et $(V,P)$ est la donnée observée propre, tandis que $X$ est la reconstruction bruitée.
+
+Donc Monte-Carlo sur $X$ = vérification complémentaire légère mais faible ; Monte-Carlo sur $(V,P)$ = le test pertinent. Les deux sont liés (puisque $X \Leftrightarrow (V,P)$ via la dynamique) mais pas interchangeables.
