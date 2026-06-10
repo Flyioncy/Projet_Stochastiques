@@ -209,11 +209,11 @@ Application (modèle virus4) : au pas natif, les résidus de l'OU comme de la d�
 
 Modèle : $dV = V(\tfrac23-\tfrac43 P+X)\,dt + \sigma\,dX$, $dP=P(-1+V)\,dt$. Prédateurs éteints (P sous $0{,}01$ vers $t=28$). $dt\approx0{,}0154$, $\tau\approx30{,}8$.
 
-**Q1 ($\sigma$).** Sous-identifié : la seule variation quadratique vient de $\sigma\,dX$, $[V]_\tau=\sigma^2[X]_\tau$, donc les données ne donnent que le produit $\sigma\cdot s$ ($s$ = diffusion du virus). On isole la partie martingale par les différences secondes (le lisse est tué), corrigées par virus4 ($\sigma=0$) : $\sigma s\approx10^{-3}$. Avec $s\approx0{,}05$ (Partie 1, même virus) $\to$ **$\sigma\approx0{,}02$**.
+**Q1 ($\sigma$).** Sous-identifié : seul le produit $\sigma\cdot s$ ($s$ = diffusion du virus) se mesure. La diffusion héritée par $V$ ($=\sigma s$) s'obtient par les différences secondes de $V$ (qui annulent la dérive lisse), corrigées par virus4 ($\sigma=0$) : $\sigma s\approx10^{-3}$. $\sigma$ et $s$ inséparables depuis virus6 seul (vérifié : régressions instables, R²~0). Avec $s\approx0{,}11$ (diffusion apparente du virus reconstruit) $\to$ **$\sigma\approx0{,}008$**.
 
 **Q2 (EDS).** Virus reconstruit (Z, méthode P1) : marche descendante de $0$ à $\approx-1$, sans plateau $\to$ pas d'OU, on propose un **brownien avec dérive** $dX=\nu\,dt+s\,dB$, $\nu\approx-0{,}036$. Résidus : $p\approx10^{-24}$, corr $\approx0{,}26$ (mêmes réserves qu'en P1, bruit pas exactement blanc/gaussien).
 
-**Q3 (loi de $X_\tau$).** EDS linéaire $\to X_\tau=\nu\tau+sB_\tau$ gaussienne : $X_\tau\sim\mathcal N(\nu\tau,\,s^2\tau)\approx\mathcal N(-1{,}1,\,0{,}28^2)$. Moyenne $\nu\tau\approx-1{,}1$ = valeur reconstruite. Justif : intégrale d'Itô d'un intégrand déterministe contre $B$ = gaussienne.
+**Q3 (loi de $X_\tau$).** EDS linéaire $\to X_\tau=\nu\tau+sB_\tau$ gaussienne : $X_\tau\sim\mathcal N(\nu\tau,\,s^2\tau)\approx\mathcal N(-1{,}1,\,0{,}61^2)$ (avec $s\approx0{,}11$). Moyenne $\nu\tau\approx-1{,}1$ = valeur reconstruite. Justif : intégrale d'Itô d'un intégrand déterministe contre $B$ = gaussienne.
 
 Fichiers : `rapport_partie2_local.tex`, `notebook_partie2_local.ipynb`, `figures_local/p2_*.png`. Local, non promu.
-Limite assumée : $\sigma$ sous-identifié sans la Partie 1 ; estimation fragile (baseline virus4, $s$ de P1).
+Limite : $\sigma$ sous-identifié, virus6 ne fixe que $\sigma s$ ; $s$ pris égal à la diffusion apparente du virus reconstruit ($0{,}11$), donc $\sigma$ indicatif.

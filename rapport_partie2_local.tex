@@ -53,19 +53,17 @@ En discrétisant le système~\eqref{eq:modele2}, la variation des victimes sur u
   \Delta V_i = \underbrace{V_i\left(\tfrac{2}{3} - \tfrac{4}{3}P_i + X_i\right)dt}_{\text{partie lisse (la dérive)}} \;+\; \underbrace{\sigma\,\Delta X_i}_{\text{secousse du virus}}.
 \end{equation}
 
-Le premier terme est une dérive lisse, proportionnelle à $dt$, qui fait évoluer $V$ doucement et régulièrement. Le second est la secousse aléatoire que le virus imprime directement à $V$, et c'est elle qui contient $\sigma$. Pour atteindre $\sigma$, il faut donc mesurer la taille de ces secousses sans la confondre avec la dérive lisse.
+Le premier terme est une dérive lisse, proportionnelle à $dt$, qui fait évoluer $V$ doucement. Le second, $\sigma\,\Delta X_i$, est la secousse aléatoire que le virus imprime directement à $V$, et c'est elle qui porte $\sigma$.
 
-\textbf{Taille d'une secousse.} Sur un pas de temps, l'incrément du virus $\Delta X_i$ a une taille typique $s\sqrt{dt}$, où $s$ est la diffusion du virus, c'est-à-dire l'amplitude de sa partie aléatoire, estimée en partie 1 à $s \approx 0{,}05$. Une secousse $\sigma\,\Delta X_i$ a donc une taille typique $\sigma\,s\sqrt{dt}$.
+\textbf{Ce que $V$ hérite du virus.} Le virus est lui-même un processus aléatoire dont on note $s$ la diffusion, l'amplitude de sa part imprévisible, de sorte que ses incréments sur un pas ont une taille typique $s\sqrt{dt}$. Le terme $\sigma\,dX_t$ transmet cette agitation à $V$, chaque secousse $\sigma\,\Delta X_i$ ayant une taille typique $\sigma\,s\sqrt{dt}$. Du point de vue de $V$, le virus et son coefficient ne se manifestent donc que par le produit $\sigma\,s$.
 
-\textbf{Séparer la secousse de la dérive.} Dans \eqref{eq:dv-disc} la secousse est noyée dans la dérive et ne se voit pas directement. Mais les deux se comportent très différemment d'un pas au suivant. La dérive lisse varie lentement, donc deux variations consécutives $\Delta V_i$ et $\Delta V_{i+1}$ se ressemblent beaucoup. La secousse, elle, est erratique, sans lien d'un pas à l'autre. On retranche donc à chaque variation la précédente, ce qui forme la \emph{différence seconde}
+\textbf{Séparer la secousse de la dérive.} Dans \eqref{eq:dv-disc} la secousse est noyée dans la dérive. Mais les deux se comportent très différemment d'un pas au suivant. La dérive lisse varie lentement, donc deux variations consécutives $\Delta V_i$ et $\Delta V_{i+1}$ se ressemblent beaucoup, tandis que la secousse est erratique, sans lien d'un pas à l'autre. On retranche donc à chaque variation la précédente, ce qui forme la \emph{différence seconde}
 
 \begin{equation}\label{eq:diff2}
   \Delta^2 V_i = \Delta V_{i+1} - \Delta V_i = V_{i+2} - 2\,V_{i+1} + V_i.
 \end{equation}
 
-La part lisse s'y annule presque entièrement, ses valeurs consécutives étant proches (ce qui reste est d'ordre $dt^2$, négligeable), tandis que les secousses survivent, $\Delta^2 V_i \approx \sigma\,(\Delta X_{i+1} - \Delta X_i)$, de taille typique $\sigma\,s\sqrt{2\,dt}$.
-
-\textbf{Mesurer la taille des secousses.} En additionnant les carrés de toutes ces différences secondes, chaque terme apporte environ $(\sigma s\sqrt{2dt})^2 = 2\,\sigma^2 s^2\,dt$ ; comme il y a environ $\tau/dt$ pas, la somme vaut
+La part lisse s'y annule presque entièrement, ses valeurs consécutives étant proches (le reste est d'ordre $dt^2$, négligeable), et il ne survit que les secousses, $\Delta^2 V_i \approx \sigma\,(\Delta X_{i+1} - \Delta X_i)$, de taille typique $\sigma\,s\sqrt{2\,dt}$. En additionnant leurs carrés, chaque terme apporte environ $2\,\sigma^2 s^2\,dt$ et il y a environ $\tau/dt$ pas, d'où
 
 \begin{equation}\label{eq:somme2}
   \sum_i (\Delta^2 V_i)^2 \approx 2\,\sigma^2 s^2\,\tau.
@@ -77,14 +75,15 @@ Une trajectoire parfaitement lisse donnerait ici une somme quasi nulle. On le v�
   $\sigma\,s = \sqrt{\dfrac{\sum (\Delta^2 V^{(6)}_i)^2 - \sum (\Delta^2 V^{(4)}_i)^2}{2\,\tau}} \approx 10^{-3}.$
 \end{center}
 
-\textbf{Du produit $\sigma s$ à $\sigma$.} Les données ne donnent que le produit $\sigma\,s$, car $\sigma$ et l'agitation propre du virus $s$ sont indissociables, un grand $\sigma$ avec un virus calme produisant les mêmes secousses qu'un petit $\sigma$ avec un virus agité. Pour les séparer, on utilise que c'est le même virus qu'en partie 1, de diffusion $s \approx 0{,}05$, d'où
+\textbf{$\sigma$ seul n'est pas identifiable.} Les données ne livrent que ce produit $\sigma\,s$, et jamais $\sigma$ et $s$ séparément. C'est lisible sur \eqref{eq:dv-disc} : un grand $\sigma$ couplé à un virus calme (petit $s$) produit exactement les mêmes secousses qu'un petit $\sigma$ couplé à un virus agité (grand $s$). Nos tentatives de séparation numérique, en régressant le virus reconstruit, ne donnent d'ailleurs aucune valeur stable, ce qui confirme cette indétermination.
+
+\textbf{Estimation de $\sigma$.} Pour avancer un nombre, il faut une estimation indépendante de la diffusion $s$ du virus. Faute d'autre information, on l'identifie à la diffusion apparente du virus reconstruit (question 2), $s \approx 0{,}11$, ce qui donne
 
 \begin{center}
-  $\sigma \approx 0{,}02.$
+  $\sigma = \dfrac{\sigma s}{s} \approx 0{,}008.$
 \end{center}
 
-\textbf{À priori, $\sigma$ est petit}, l'effet direct du virus sur $V$ restant une perturbation modeste devant sa dérive.
-
+\textbf{À priori, $\sigma$ est petit, de l'ordre de $10^{-2}$}, l'effet direct du virus sur $V$ restant une faible perturbation devant sa dérive. Cette valeur reste toutefois tributaire de l'estimation de $s$, que \texttt{virus6.csv} ne permet pas d'isoler du produit $\sigma s$.
 \subsection*{Question 2 — une EDS pour le virus}
 
 $\sigma$ étant petit, la reconstruction du premier modèle reste valable au premier ordre, le virus apparent $X_i \approx \Delta V_i/(V_i\,dt) - \tfrac{2}{3} + \tfrac{4}{3}P_i$ (figure~\ref{fig:p2virus}). Le virus part de $0$ et dérive régulièrement vers $\approx -1$, sans jamais revenir vers un niveau fixe. C'est cette intensité négative qui s'installe durablement qui finit par éteindre les prédateurs.
@@ -121,16 +120,16 @@ Sous le modèle~\eqref{eq:eds2}, l'intégration est immédiate, $X_\tau = X_0 + 
   X_\tau \sim \mathcal N\!\left(X_0 + \nu\tau,\ s^2\tau\right).
 \end{equation}
 
-Avec $X_0 = 0$, $\nu \approx -0{,}036$ et $s \approx 0{,}05$, on obtient une moyenne $\nu\tau \approx -1{,}1$ et un écart-type $s\sqrt{\tau} \approx 0{,}28$, soit
+Avec $X_0 = 0$, $\nu \approx -0{,}036$ et la diffusion du virus $s \approx 0{,}11$ (question 1), on obtient une moyenne $\nu\tau \approx -1{,}1$ et un écart-type $s\sqrt{\tau} \approx 0{,}61$, soit
 
 \begin{center}
-  $X_\tau \sim \mathcal N(-1{,}1,\ 0{,}28^2).$
+  $X_\tau \sim \mathcal N(-1{,}1,\ 0{,}61^2).$
 \end{center}
 
 \textbf{À priori, on propose une loi normale pour $X_\tau$.} Une seule trajectoire ne permet pas de la valider, mais sa moyenne $\nu\tau$ coïncide avec la valeur reconstruite $X_\tau \approx -1{,}1$, et le caractère gaussien découle directement de la linéarité de l'EDS.
 
 \subsection*{Bilan}
 
-Le terme direct du virus est faible ($\sigma \approx 0{,}02$). Le virus lui-même se décrit au plus simple par un brownien avec dérive nettement négative, qui pousse l'intensité vers $\approx -1$ et précipite l'extinction des prédateurs, et dont la valeur finale $X_\tau$ suit une loi normale. La réserve de la partie 1 demeure, le bruit du virus n'étant pas exactement un bruit blanc gaussien.
+Le terme direct du virus est faible, de l'ordre de $\sigma \approx 0{,}008$, encore que \texttt{virus6.csv} ne fixe au fond que le produit $\sigma s$. Le virus lui-même se décrit au plus simple par un brownien avec dérive nettement négative, qui pousse l'intensité vers $\approx -1$ et précipite l'extinction des prédateurs, et dont la valeur finale $X_\tau$ suit une loi normale. Comme dans le premier modèle, le bruit du virus n'est toutefois pas exactement un bruit blanc gaussien.
 
 \end{document}

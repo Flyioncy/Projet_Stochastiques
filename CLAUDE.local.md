@@ -69,7 +69,7 @@ Fichiers : `rapport_recherche_local.tex`, `notebook_recherche_local.ipynb`, `fig
 
 Modèle $dV=V(\tfrac23-\tfrac43P+X)\,dt+\sigma\,dX$, $dP=P(-1+V)\,dt$. Fichiers locaux `rapport_partie2_local.tex`, `notebook_partie2_local.ipynb`, `figures_local/p2_*.png` (à la manière de la recherche, non promus). $dt\approx0{,}0154$, $\tau\approx30{,}8$, prédateurs éteints.
 
-- **Q1** : $\sigma$ sous-identifié (les données ne donnent que le produit $\sigma\cdot s$, via $[V]_\tau=\sigma^2[X]_\tau$). Partie martingale par différences secondes (baseline virus4) : $\sigma s\approx10^{-3}$ ; avec $s\approx0{,}05$ (P1) $\to$ **$\sigma\approx0{,}02$**.
-- **Q2** : virus reconstruit = marche descendante $0\to-1$ sans plateau $\to$ **brownien avec dérive** $\nu\approx-0{,}036$, $s\approx0{,}05$ ; résidus imparfaits ($p\approx10^{-24}$, corr $0{,}26$, comme P1).
-- **Q3** : **$X_\tau\sim\mathcal N(\nu\tau,\,s^2\tau)\approx\mathcal N(-1{,}1,\,0{,}28^2)$** (EDS linéaire $\to$ gaussienne) ; moyenne $\nu\tau$ = valeur reconstruite.
-- À discuter avec Philippe : $\sigma$ fragile (sous-identification, baseline) ; pertinence de réutiliser $s$ de P1 ; promotion éventuelle.
+- **Q1** : $\sigma$ sous-identifié, seul le produit $\sigma\cdot s$ se mesure. Diffusion héritée par $V$ ($=\sigma s$) via différences secondes de $V$ (baseline virus4) : $\sigma s\approx10^{-3}$ ; avec $s\approx0{,}11$ (diffusion apparente du virus reconstruit) $\to$ **$\sigma\approx0{,}008$**.
+- **Q2** : virus reconstruit = marche descendante $0\to-1$ sans plateau $\to$ **brownien avec dérive** $\nu\approx-0{,}036$, $s\approx0{,}11$ ; résidus imparfaits ($p\approx10^{-24}$, corr $0{,}26$).
+- **Q3** : **$X_\tau\sim\mathcal N(\nu\tau,\,s^2\tau)\approx\mathcal N(-1{,}1,\,0{,}61^2)$** (EDS linéaire $\to$ gaussienne) ; moyenne $\nu\tau$ = valeur reconstruite.
+- À discuter avec Philippe : $\sigma$ sous-identifié (seul $\sigma s$ mesurable) ; $s$ pris = diffusion apparente du virus reconstruit ($0{,}11$) ; promotion éventuelle.
