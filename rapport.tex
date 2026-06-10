@@ -62,7 +62,7 @@ Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas 
   dt \approx \frac{P_{i+1} - P_i}{P_i\,(-1 + V_i)}.
 \end{equation}
 
-Nous avons donc moyenné cette quantité sur l'ensemble des points tout en écartant ceux où $V_i$ est trop proche de $1$ parce qu'ils annulent le dénominateur. On obtient ainsi $dt \approx 0{,}015$, ce qui donne une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de construire l'axe des temps puis de tracer les deux populations (figure~\ref{fig:series}).
+Nous avons donc moyenné cette quantité sur l'ensemble des points, en écartant ceux où le dénominateur $P_i(-1+V_i)$ est trop proche de zéro, soit que $V_i$ approche $1$, soit que $P_i$ approche $0$. Un seuil de $0{,}001$ sur $|P_i(-1+V_i)|$ ne retire qu'environ $4\,\%$ des points et donne $dt \approx 0{,}015$, soit une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de construire l'axe des temps puis de tracer les deux populations (figure~\ref{fig:series}).
 
 \begin{figure}[ht]
   \centering
