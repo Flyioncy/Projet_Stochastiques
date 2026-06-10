@@ -156,7 +156,13 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous revenons à ce que chaque modèle affirme. Une équation $dX_t = a(X_t)\,dt + \sigma\,dB_t$ suppose qu'une fois la dérive $a(X_t)\,dt$ retirée il ne reste qu'un bruit brownien. En discrétisant, ses résidus $\varepsilon_i = \Delta X_i - a(X_i)\,dt$ doivent donc être indépendants et suivre une loi normale centrée d'écart-type $\sigma\sqrt{dt}$, puisque les incréments d'un mouvement brownien le sont. Tester un modèle revient alors à confronter ses résidus à ces deux exigences, leur loi et leur indépendance.
+Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Pour les départager, nous revenons à ce que chaque modèle affirme. Une équation $dX_t = a(X_t)\,dt + \sigma\,dB_t$ suppose qu'une fois la dérive $a(X_t)\,dt$ retirée il ne reste qu'un bruit brownien. Son résidu standardisé
+
+\begin{equation}\label{eq:residu}
+  \varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{\sigma\sqrt{dt}} = \frac{\Delta B_i}{\sqrt{dt}}
+\end{equation}
+
+n'est alors qu'un incrément de mouvement brownien ramené à l'échelle $\sqrt{dt}$. Comme un tel incrément suit $\mathcal N(0,dt)$, le résidu doit suivre une loi normale centrée réduite $\mathcal N(0,1)$, et les résidus successifs doivent être indépendants. Tester un modèle revient donc à confronter ses résidus à ces deux exigences, leur loi et leur indépendance.
 
 \subsection*{Test du brownien avec dérive}
 
@@ -166,7 +172,16 @@ Le brownien avec dérive s'écrit $dX_t = \nu\,dt + \sigma\,dB_t$, de solution i
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
 \end{center}
 
-La dérive étant constante, les résidus $\varepsilon_i = \Delta X_i - \nu\,dt$ ne sont que les différences recentrées. Leur loi est donc celle déjà observée à la figure~\ref{fig:hist}, et un test de Kolmogorov-Smirnov contre la loi normale attendue donne une p-value de l'ordre de $10^{-14}$. Les résidus consécutifs gardent par ailleurs une corrélation de l'ordre de $0{,}26$, loin de l'indépendance d'un bruit brownien.
+La dérive étant constante, les résidus $\varepsilon_i = (\Delta X_i - \nu\,dt)/(\sigma\sqrt{dt})$ ne sont que les différences recentrées et réduites. La figure~\ref{fig:res-derive} compare leur histogramme à la loi $\mathcal N(0,1)$ attendue.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{virus4_residus_derive.png}
+  \caption{Histogramme des résidus standardisés du brownien avec dérive, comparé à la loi normale centrée réduite.}
+  \label{fig:res-derive}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne une p-value de l'ordre de $10^{-14}$, et les résidus consécutifs gardent une corrélation de l'ordre de $0{,}26$, loin de l'indépendance d'un bruit brownien.
 
 \textbf{À priori, le brownien avec dérive n'est pas retenu.}
 
@@ -184,7 +199,16 @@ une relation linéaire entre $\Delta X_i$ et $X_i$. Sa pente vaut $-\theta\,dt$ 
   $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
 \end{center}
 
-Les résidus $\varepsilon_i = \Delta X_i - \theta(\mu - X_i)\,dt$ devraient former le même bruit brownien. Le terme de rappel retiré étant minime, ils ne s'écartent pas davantage de la normale que ceux de la dérive, avec une p-value du test de Kolmogorov-Smirnov de l'ordre de $10^{-14}$, et ils conservent la même corrélation d'un pas à l'autre, de l'ordre de $0{,}26$.
+Les résidus standardisés $\varepsilon_i = (\Delta X_i - \theta(\mu - X_i)\,dt)/(\sigma\sqrt{dt})$ devraient de même suivre $\mathcal N(0,1)$. Le terme de rappel retiré étant minime, leur histogramme reste celui de la dérive (figure~\ref{fig:res-ou}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{virus4_residus_ou.png}
+  \caption{Histogramme des résidus standardisés de l'Ornstein-Uhlenbeck, comparé à la loi normale centrée réduite.}
+  \label{fig:res-ou}
+\end{figure}
+
+Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne là aussi une p-value de l'ordre de $10^{-14}$, et la corrélation entre résidus consécutifs reste de l'ordre de $0{,}26$.
 
 \textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
 
