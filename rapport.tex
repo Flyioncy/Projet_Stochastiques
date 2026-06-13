@@ -222,6 +222,54 @@ Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne là aussi une p-val
 
 \subsection*{Bilan}
 
-Les deux candidats sont écartés pour la même raison. Tous deux reposent sur un bruit brownien, donc sur des résidus gaussiens et indépendants, alors que ceux du virus reconstruit s'écartent nettement d'une loi normale et restent corrélés d'un pas à l'autre. Le modèle du virus reste donc à trouver.
+Les deux candidats sont écartés pour la même raison. Tous deux reposent sur un bruit brownien, donc sur des résidus gaussiens et indépendants, alors que ceux du virus reconstruit présentent deux défauts bien distincts. Ils restent corrélés d'un pas au suivant, ce qui trahit une mémoire, et ils s'écartent nettement d'une loi normale par des queues plus lourdes. Plutôt que d'abandonner d'emblée le cadre des EDS, il nous a semblé plus instructif de corriger ces deux défauts l'un après l'autre.
+
+\subsection*{Un bruit coloré à mémoire}
+
+Le premier défaut à corriger est la mémoire. Une idée a été de renoncer au bruit blanc et de donner au bruit lui-même une corrélation d'un pas au suivant, c'est-à-dire de le décrire par un Ornstein-Uhlenbeck. En discrétisant un tel bruit $dE_t = -\theta E_t\,dt + s\,dB_t$, on obtient $E_i = (1 - \theta\,dt)\,E_{i-1} + s\,\Delta B_i$, soit une relation autorégressive d'ordre un sur les résidus
+
+\begin{equation}\label{eq:ar1}
+  \varepsilon_i = \phi\,\varepsilon_{i-1} + \eta_i,
+\end{equation}
+
+où $\phi = 1 - \theta\,dt$ porte la mémoire tandis que les innovations $\eta_i = s\,\Delta B_i$ doivent retrouver le statut d'un bruit blanc gaussien. Tester ce modèle revient à régresser les résidus de l'Ornstein-Uhlenbeck sur leur passé pour estimer $\phi$, puis à vérifier que les innovations $\eta_i = \varepsilon_i - \phi\,\varepsilon_{i-1}$ sont indépendantes et gaussiennes.
+
+La régression donne directement la mémoire et nous standardisons ensuite les innovations pour les comparer à $\mathcal N(0,1)$.
+
+\begin{center}
+  $\phi \approx 0{,}26.$
+\end{center}
+
+La corrélation entre innovations consécutives tombe à $\approx 0{,}02$ alors que les résidus de départ en gardaient $\approx 0{,}26$, si bien que la mémoire est effectivement captée par le terme autorégressif. La loi, en revanche, ne s'améliore pas. Le test de Kolmogorov-Smirnov des innovations contre $\mathcal N(0,1)$ donne une p-value de l'ordre de $4\cdot10^{-14}$, largement inférieure à $0{,}05$ (figure~\ref{fig:res-colore}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{virus4_residus_colore.png}
+  \caption{Histogramme des innovations standardisées du bruit coloré, comparé à la loi normale centrée réduite. Le terme autorégressif retire la mémoire mais les queues restent trop lourdes.}
+  \label{fig:res-colore}
+\end{figure}
+
+\textbf{À priori, l'indépendance est rétablie tandis que l'hypothèse d'innovations gaussiennes n'est pas retenue.}
+
+\subsection*{La loi des innovations}
+
+La mémoire étant captée par le terme autorégressif, il restait à corriger la loi des innovations. Leur histogramme reste plus piqué et à queues plus lourdes qu'une gaussienne, ce qui nous a conduits à tester une loi de Student. Une telle loi sort du cadre brownien strict puisque les incréments d'un mouvement brownien y sont gaussiens par construction, mais son nombre de degrés de liberté $\nu$ règle l'épaisseur des queues et permet de les ajuster.
+
+Nous avons ajusté une loi de Student aux innovations par maximum de vraisemblance puis comparé cet ajustement à la gaussienne, dans les deux cas par un test de Kolmogorov-Smirnov.
+
+\begin{center}
+  $\nu \approx 2{,}4.$
+\end{center}
+
+Le test contre la Student donne une p-value de l'ordre de $2\cdot10^{-2}$, contre $4\cdot10^{-14}$ pour la gaussienne (figure~\ref{fig:student}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{virus4_innovations_student.png}
+  \caption{Innovations standardisées comparées à la loi de Student ajustée ($\nu \approx 2{,}4$) et à la loi normale centrée réduite. La Student épouse bien mieux les queues lourdes.}
+  \label{fig:student}
+\end{figure}
+
+La p-value remonte de douze ordres de grandeur mais reste, à $\approx 0{,}02$, en dessous de $0{,}05$. \textbf{À priori, l'hypothèse d'innovations exactement de Student n'est pas retenue, même si cette loi décrit nettement mieux les innovations que la gaussienne.}
 
 \end{document}
