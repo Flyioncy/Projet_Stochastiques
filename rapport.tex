@@ -62,18 +62,11 @@ Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas 
   dt \approx \frac{P_{i+1} - P_i}{P_i\,(-1 + V_i)}.
 \end{equation}
 
-Nous avons donc moyenné cette quantité sur l'ensemble des points, en écartant ceux où le dénominateur $P_i(-1+V_i)$ est trop proche de zéro, soit que $V_i$ approche $1$, soit que $P_i$ approche $0$. Un seuil de $0{,}001$ sur $|P_i(-1+V_i)|$ ne retire qu'environ $4\,\%$ des points et donne $dt \approx 0{,}015$, soit une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de construire l'axe des temps puis de tracer les deux populations (figure~\ref{fig:series}).
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.85\textwidth]{virus4_series.png}
-  \caption{Évolution observée des densités de victimes $V_t$ et de prédateurs $P_t$ sur l'intervalle $[0,\tau]$, reconstruite à partir de \texttt{virus4.csv}.}
-  \label{fig:series}
-\end{figure}
+Nous avons donc moyenné cette quantité sur l'ensemble des points, en écartant ceux où le dénominateur $P_i(-1+V_i)$ est trop proche de zéro, soit que $V_i$ approche $1$, soit que $P_i$ approche $0$. Un seuil de $0{,}001$ sur $|P_i(-1+V_i)|$ ne retire qu'environ $4\,\%$ des points et donne $dt \approx 0{,}015$, soit une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de reconstruire l'axe des temps.
 
 \subsection*{Comparaison avec le modèle de Lotka-Volterra classique}
 
-Pour essayer de mesurer l'effet du virus, nous avons eu l'idée d'intégrer le modèle déterministe classique, c'est-à-dire le même système lorsque l'on retire le terme $X_t$. Une petite identification avec la forme générale~\eqref{eq:base} donne $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. Nous sommes partis des mêmes conditions initiales que les données, soit $V_0 = 1$ et $P_0 = 0{,}4$. La figure~\ref{fig:comparaison} superpose les deux trajectoires.
+Maintenant que l'axe des temps est reconstruit, nous avons voulu regarder les deux populations et, dans le même mouvement, mesurer l'effet du virus en les confrontant au modèle déterministe classique, c'est-à-dire au même système lorsque l'on retire le terme $X_t$. Une petite identification avec la forme générale~\eqref{eq:base} donne $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. Nous sommes partis des mêmes conditions initiales que les données, soit $V_0 = 1$ et $P_0 = 0{,}4$. La figure~\ref{fig:comparaison} superpose alors les trajectoires observées et celles de ce modèle classique, ce qui donne d'un coup une vue des données et leur écart au cas sans virus.
 
 \begin{figure}[ht]
   \centering
@@ -82,23 +75,13 @@ Pour essayer de mesurer l'effet du virus, nous avons eu l'idée d'intégrer le m
   \label{fig:comparaison}
 \end{figure}
 
-\subsection*{Premières observations}
-
 La comparaison nous a semblé parlante. Le modèle classique produit des oscillations régulières et entretenues où les deux populations tournent indéfiniment autour de leur point d'équilibre et où le portrait de phase serait une courbe fermée bien nette. Les données observées partent dans la même direction au tout début mais s'en écartent franchement ensuite. La population de prédateurs ne semble notamment pas ré-osciller puisqu'elle s'effondre progressivement et reste très basse alors que le modèle classique la voit remonter à chaque cycle.
 
 Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pas d'ajouter un petit bruit autour de la trajectoire classique mais qu'il modifie la dynamique d'ensemble et casse la périodicité. C'est sur ce comportement que nous avons choisi d'appuyer la modélisation de $(X_t)$ dans la suite.
 
 \subsection*{Reconstruction du virus $X_t$}
 
-Intéressons-nous maintenant directement à $X_t$. En supposant que le virus admet une moyenne finie $m = \mathbb{E}[X_t]$ (hypothèse que nous vérifierons plus loin mais qui paraît tout à fait plausible), on peut passer l'équation des proies à sa moyenne et en chercher l'équilibre. Le taux de croissance moyen des proies s'annule lorsque $\tfrac{2}{3} - \tfrac{4}{3}P_t + m = 0$, ce qui déplace l'équilibre des prédateurs du cas classique $P^* = \tfrac{1}{2}$ vers
-
-\begin{equation}\label{eq:equilibre}
-  P^* = \frac{1}{2} + \frac{3}{4}m.
-\end{equation}
-
-Or la figure~\ref{fig:series} montre des prédateurs qui s'effondrent bien en dessous de $\tfrac{1}{2}$, donc on s'attend à une moyenne $m$ négative.
-
-Pour vérifier cette intuition nous avons eu l'idée de discrétiser l'équation de $dV_t$. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
+Ces premières observations restent qualitatives. Pour aller plus loin il nous a semblé qu'il fallait regarder directement le virus $X_t$, qui porte l'information utile sur la perturbation. Or l'équation des proies le fait apparaître explicitement, si bien qu'il suffit de la discrétiser pour l'en extraire. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
 \begin{equation}\label{eq:disc}
   V_i - V_{i-1} \approx V_{i-1}\left(\tfrac{2}{3} - \tfrac{4}{3}P_{i-1} + X_{i-1}\right)dt.
@@ -119,7 +102,7 @@ Cette reconstruction est entièrement déterministe puisqu'elle ne fait qu'inver
   \label{fig:xt}
 \end{figure}
 
-La moyenne observée semble cohérente avec notre prédiction précédente. En revanche, le graphe des différences ne nous apprend pas grand-chose à lui seul.
+Le virus reconstruit est en moyenne nettement négatif. En revanche, le graphe des différences ne nous apprend pas grand-chose à lui seul.
 
 \begin{figure}[h]
   \centering
