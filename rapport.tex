@@ -149,23 +149,23 @@ Deux candidats ont passé ce premier filtre, le brownien avec dérive et l'Ornst
   dX_t = \nu\,dt + \sigma\,dB_t \qquad \text{et} \qquad dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t,
 \end{equation}
 
-et se mettent tous deux sous la forme $dX_t = a(X_t)\,dt + \sigma\,dB_t$, où la dérive $a(X_t)$ vaut $\nu$ pour le premier et $\theta(\mu - X_t)$ pour le second. Une fois la dérive retirée, il ne doit rester qu'un bruit brownien, donc le résidu standardisé
+et se mettent tous deux sous la forme $dX_t = a(X_t)\,dt + \sigma\,dB_t$, où la dérive $a(X_t)$ vaut $\nu$ pour le premier et $\theta(\mu - X_t)$ pour le second. Le résidu standardisé
 
 \begin{equation}\label{eq:residu}
   \varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{\sigma\sqrt{dt}} = \frac{\Delta B_i}{\sqrt{dt}}
 \end{equation}
 
-doit alors suivre une loi normale centrée réduite $\mathcal N(0,1)$, avec des termes successifs indépendants. Nous avons mesuré cette indépendance par l'autocorrélation de rang $1$, le coefficient de corrélation entre un terme $y_i$ et le suivant,
+doit alors suivre une loi normale centrée réduite $\mathcal N(0,1)$, avec des termes successifs indépendants. Nous avons mesuré cette indépendance par l'autocorrélation de rang $1$ :
 
 \begin{equation}\label{eq:acf1}
   \rho_1 = \frac{\sum_i \left(y_i - \bar{y}\right)\left(y_{i+1} - \bar{y}\right)}{\sum_i \left(y_i - \bar{y}\right)^2},
 \end{equation}
 
-nulle quand les termes sont indépendants. Un modèle pertinent doit donc d'abord passer ce test, qui porte sur la loi des résidus et sur leur indépendance.
+Cette quantité doit être nulle quand les termes sont indépendants. Un modèle pertinent doit donc d'abord passer ce test, qui porte sur la loi des résidus et sur leur indépendance.
 
 \subsubsection*{Test du brownien avec dérive}
 
-En discrétisant son équation, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences a donné $\nu$, leur écart-type $\sigma\sqrt{dt}$ donc $\sigma$.
+En discrétisant son équation, on obtient $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. On peut facilement récupérer $\nu$ et l'écart-type $\sigma\sqrt{dt}$ donc $\sigma$.
 
 \begin{center}
   $\nu = \overline{\Delta X}/dt \approx -0{,}02, \qquad \sigma = \mathrm{std}(\Delta X)/\sqrt{dt} \approx 0{,}05.$
@@ -192,13 +192,11 @@ En discrétisant son équation, on obtient
   \Delta X_i \approx \theta\mu\,dt - \theta\,dt\,X_i + \sigma\,\Delta B_i,
 \end{equation}
 
-une relation linéaire entre $\Delta X_i$ et $X_i$. Une régression a donné la pente $-\theta\,dt$ et l'ordonnée $\theta\mu\,dt$, donc $\theta$ et $\mu$, et l'écart-type des résidus a donné $\sigma$.
+une relation linéaire entre $\Delta X_i$ et $X_i$. Une régression a donné la pente $-\theta\,dt$ et l'ordonnée $\theta\mu\,dt$, donc $\theta$ et $\mu$. Enfin, l'écart-type des résidus a donné $\sigma$.
 
 \begin{center}
   $\theta \approx 0{,}07, \qquad \mu \approx -0{,}66, \qquad \sigma \approx 0{,}05.$
 \end{center}
-
-Le rappel retiré étant minime, l'histogramme des résidus est resté celui de la dérive (figure~\ref{fig:res-ou}).
 
 \begin{figure}[ht]
   \centering
@@ -225,21 +223,21 @@ Le premier défaut à corriger a été la mémoire, l'autocorrélation $\rho_1 \
   dE_t = -\theta_E\,E_t\,dt + s\,dB_t,
 \end{equation}
 
-où $E_t$ est lui-même un Ornstein-Uhlenbeck. En le discrétisant, $E_i = (1 - \theta_E\,dt)\,E_{i-1} + s\,\Delta B_i$, ce qui revient sur les résidus $\varepsilon_i$ à une relation autorégressive d'ordre un
+où $E_t$ est lui-même un Ornstein-Uhlenbeck. En le discrétisant, $E_i = (1 - \theta_E\,dt)\,E_{i-1} + s\,\Delta B_i$, on obtient une relation autorégressive d'ordre un sur les résidus $\varepsilon_i$ :
 
 \begin{equation}\label{eq:ar1}
   \varepsilon_i = \phi\,\varepsilon_{i-1} + \eta_i,
 \end{equation}
 
-où $\phi = 1 - \theta_E\,dt$ porte la mémoire et où les innovations $\eta_i = s\,\Delta B_i$ doivent, elles, redevenir un bruit blanc gaussien.
+On a posé $\phi = 1 - \theta_E\,dt$ qui porte la mémoire et on note les innovations $\eta_i = s\,\Delta B_i$. Elles doivent vérifier l'hypothèse d'un bruit blanc gaussien.
 
-Le test a donc changé d'objet, portant non plus sur les résidus $\varepsilon_i$ mais sur les innovations $\eta_i = \varepsilon_i - \phi\,\varepsilon_{i-1}$. Nous avons fait une régression des résidus sur leur passé pour estimer $\phi$, puis testé l'indépendance des innovations par leur autocorrélation et leur normalité par un test de Kolmogorov-Smirnov. L'amplitude $s$ n'a pas eu à être connue, elle ne fixe que l'échelle, que la standardisation élimine.
+Le test a donc changé d'objet, portant non plus sur les résidus $\varepsilon_i$ mais sur les innovations $\eta_i = \varepsilon_i - \phi\,\varepsilon_{i-1}$. Nous avons fait une régression des résidus pour estimer $\phi$, puis testé l'indépendance des innovations par leur autocorrélation et leur normalité par un test de Kolmogorov-Smirnov. L'amplitude $s$ n'a pas eu à être connue, elle ne fixe que l'échelle ce que la standardisation élimine.
 
 \begin{center}
   $\phi \approx 0{,}26.$
 \end{center}
 
-La corrélation entre innovations consécutives est tombée à $\approx 0{,}02$, alors que les résidus en gardaient $\approx 0{,}26$, donc la mémoire a bien été captée. La loi, en revanche, ne s'est pas améliorée, le test de Kolmogorov-Smirnov des innovations contre $\mathcal N(0,1)$ donnant une p-value de l'ordre de $4\cdot10^{-14}$ (figure~\ref{fig:res-colore}).
+La corrélation entre innovations consécutives est tombée à $\approx 0{,}02$, alors que les résidus en gardaient $\approx 0{,}26$. Ainsi, on voit que notre modèle capte correctement la rétention de mémoire entre les bruits. La loi, en revanche, ne s'est pas améliorée, le test de Kolmogorov-Smirnov des innovations contre $\mathcal N(0,1)$ donnant une p-value de l'ordre de $4\cdot10^{-14}$ (figure~\ref{fig:res-colore}).
 
 \begin{figure}[ht]
   \centering
@@ -252,59 +250,53 @@ La corrélation entre innovations consécutives est tombée à $\approx 0{,}02$,
 
 \subsubsection*{La loi des innovations}
 
-La mémoire captée, il restait à corriger la loi des innovations, plus piquée et à queues plus lourdes qu'une gaussienne. Cela nous a conduits à tester une loi de Student. Le modèle est resté le bruit coloré~\eqref{eq:colore}, mais ses innovations ne sont plus supposées gaussiennes, nous les avons prises de Student standardisée à $\nu$ degrés de liberté,
+Il restait alors à corriger la loi des innovations qui était plus piquée qu'une gaussienne, caractéristique d'une loi de Student. Le modèle est resté le bruit coloré~\eqref{eq:colore}, mais ses innovations ne sont plus supposées gaussiennes. Nous les avons prises de Student standardisée à $\nu$ degrés de liberté,
 
 \begin{equation}\label{eq:student}
   \eta_i \sim \mathrm{Student}(\nu),
 \end{equation}
 
-dont les queues plus épaisses tolèrent des valeurs extrêmes. Une telle loi sort du cadre brownien strict, où les incréments sont gaussiens, mais son degré de liberté $\nu$ règle justement l'épaisseur des queues.
+Une telle loi sort du cadre brownien strict, où les incréments sont gaussiens, mais au vue de l'histogramme sur les incréments, ça valait le coup d'être testé.
 
-Nous avons estimé $\nu$ par maximum de vraisemblance, en retenant la valeur qui maximise la somme des log-densités $\sum_i \ln f_\nu(\eta_i)$ des innovations, trouvée numériquement. Nous avons ensuite jugé l'ajustement par un test de Kolmogorov-Smirnov, comparé à celui de la gaussienne.
-
-\begin{center}
-  $\nu \approx 2{,}4.$
-\end{center}
+Nous avons estimé $\nu\approx 2{,}4$ par maximum de vraisemblance, en retenant la valeur qui maximise la somme des log-densités $\sum_i \ln f_\nu(\eta_i)$ des innovations, trouvée numériquement. Nous avons ensuite jugé l'ajustement par un test de Kolmogorov-Smirnov, comparé à celui de la gaussienne.
 
 Le test contre la Student a donné une p-value de l'ordre de $2\cdot10^{-2}$, contre $4\cdot10^{-14}$ pour la gaussienne (figure~\ref{fig:student}).
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\textwidth]{virus4_innovations_student.png}
+  \includegraphics[width=0.4\textwidth]{virus4_innovations_student.png}
   \caption{Innovations standardisées comparées à la loi de Student ajustée ($\nu \approx 2{,}4$) et à la loi normale centrée réduite. La Student épouse bien mieux les queues lourdes.}
   \label{fig:student}
 \end{figure}
 
-La p-value a remonté de douze ordres de grandeur mais est restée, à $\approx 0{,}02$, en dessous de $0{,}05$. \textbf{À priori, l'hypothèse d'innovations exactement de Student n'est pas retenue, même si cette loi décrit nettement mieux les innovations que la gaussienne.}
+La p-value s'est nettement améliorée, atteignant $\approx 0{,}02$, juste en dessous de $0{,}05$. \textbf{À priori, l'hypothèse d'innovations exactement de Student n'est pas retenue, même si cette loi décrit nettement mieux les innovations que la gaussienne.}
 
-\subsubsection*{Bilan intermédiaire}
-
-Récapitulons. L'Ornstein-Uhlenbeck simple a été écarté par ses résidus, corrélés et à queues trop lourdes. Le bruit coloré a rétabli l'indépendance mais sans corriger la loi, et la Student a rapproché les innovations d'une vraie densité sans passer le test. Aucun de ces raffinements n'a suffi, nous n'arrivons pas à décrire simplement les incréments du virus.
+ L'Ornstein-Uhlenbeck simple a été écarté par ses résidus, corrélés et à queues trop lourdes. Le bruit coloré a rétabli l'indépendance mais sans corriger la loi, et la Student a rapproché les innovations d'une vraie densité sans passer le test. Aucun de ces raffinements n'a suffi, nous n'arrivons pas à décrire simplement les incréments du virus.
 
 \subsubsection*{Une échelle de temps différente pour $X$ ?}
 
-Il nous a semblé que le problème ne tenait peut-être pas au choix du modèle mais à l'échelle de temps à laquelle on regarde $X$. Les victimes et les prédateurs varient à l'échelle de l'unité de temps, et les données sont échantillonnées bien plus finement, environ tous les $0{,}015$ unités de temps. Mais le virus n'a aucune raison de fluctuer au même rythme, il pourrait évoluer plus lentement, et cette idée nous a conduits à le regarder sur un pas dilaté. Nous avons donc repris le modèle le plus simple décrivant la descente vers un plateau, l'Ornstein-Uhlenbeck classique,
+Il nous a semblé que le problème ne tenait peut-être pas au choix du modèle mais à l'échelle de temps à laquelle on regarde $X$. On sait que les victimes et les prédateurs varient environ tous les $0{,}015$ unités de temps. Mais le virus n'a aucune raison de fluctuer au même rythme, il pourrait évoluer plus lentement, et cette idée nous a conduits à le regarder sur un pas de temps dilaté. Nous avons donc repris le modèle d'Ornstein-Uhlenbeck classique :
 
 \begin{equation}\label{eq:ou-grossier}
   dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t,
 \end{equation}
 
-et nous l'avons confronté aux données sur un pas plus grand. Nous avons sous-échantillonné $X$ un point sur $k$, ce qui revient à l'observer au pas dilaté $dt_k = k\,dt$, puis à chaque pas estimé $(\theta,\mu,\sigma)$ par une régression de $\Delta X_i$ sur $X_i$ et testé ses résidus comme plus haut, leur indépendance par l'autocorrélation $\rho_1$~\eqref{eq:acf1} et leur normalité par un test de Kolmogorov-Smirnov.
+et nous l'avons confronté aux données sur un pas plus grand. Nous avons sous-échantillonné $X$ un point sur $k$, ce qui revient à l'observer au pas dilaté $dt_k = k\,dt$. On estime ensuite comme précédemment $(\theta,\mu,\sigma)$ par une régression de $\Delta X_i$ sur $X_i$ et on a testé ses résidus comme plus haut.
 
-La figure~\ref{fig:coarse} suit ces deux quantités du pas natif vers des pas plus grands. Au pas natif les résidus sont corrélés ($\rho_1 \approx 0{,}26$) et non gaussiens (p-value $\approx 3\cdot10^{-14}$), les deux défauts déjà rencontrés. En dilatant le pas, ils s'amendent ensemble.
+La figure~\ref{fig:coarse} suit ces deux quantités du pas natif vers des pas plus grands.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.8\textwidth]{virus4_pas_dilate.png}
+  \includegraphics[width=0.5\textwidth]{virus4_pas_dilate.png}
   \caption{Pour l'Ornstein-Uhlenbeck ajusté à chaque pas $dt_k = k\,dt$, autocorrélation de rang $1$ de ses résidus (rouge) et p-value du test de Kolmogorov-Smirnov de leur normalité (bleu). Les deux défauts du pas natif s'effacent au-delà du pas double, le pas quadruple ($dt_k \approx 0{,}060$) donnant les meilleurs résidus.}
   \label{fig:coarse}
 \end{figure}
 
-Le choix du pas a été un compromis. Au pas double ($dt_k \approx 0{,}03$) la p-value des résidus atteint à peine $0{,}05$ et leur autocorrélation reste de $\approx 0{,}06$, une mémoire subsiste. Le pas triple ($dt_k \approx 0{,}045$) corrige déjà les deux défauts, mais c'est au pas quadruple ($dt_k \approx 0{,}060$) que les résidus sont les mieux comportés, autocorrélation quasi nulle ($\approx 0{,}01$) et p-value la plus élevée ($\approx 0{,}88$). Aller au-delà ne ferait que jeter des points. Nous avons donc retenu $dt_k \approx 0{,}060$. Pour fixer les idées, si les populations variaient tous les jours, le virus n'évoluerait qu'environ tous les quatre jours. La figure~\ref{fig:residus} compare la distribution des résidus à $\mathcal N(0,1)$, au pas natif puis à ce pas.
+Au pas double ($dt_k \approx 0{,}03$) la p-value des résidus atteint à peine $0{,}05$ et leur autocorrélation reste de $\approx 0{,}06$, une mémoire subsiste. Le pas triple ($dt_k \approx 0{,}045$) corrige déjà les deux défauts, mais c'est au pas quadruple ($dt_k \approx 0{,}060$) qu'on obtient les meilleurs résultats : une autocorrélation quasi nulle ($\approx 0{,}01$) et p-value la plus élevée ($\approx 0{,}88$). Les pas encore plus larges semblent visuellement moins pertinent. Nous avons donc retenu $dt_k \approx 0{,}060$. En fait, c'est comme dire : si les populations variaient tous les jours, le virus n'évoluerait qu'environ tous les quatre jours. La figure~\ref{fig:residus} compare la distribution des résidus à $\mathcal N(0,1)$, au pas natif puis à ce pas.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{virus4_residus_dilate.png}
+  \includegraphics[width=0.7\textwidth]{virus4_residus_dilate.png}
   \caption{Résidus standardisés de l'Ornstein-Uhlenbeck comparés à $\mathcal N(0,1)$, au pas natif (gauche, pic marqué et queues lourdes) et au pas dilaté (droite, accord net).}
   \label{fig:residus}
 \end{figure}
@@ -319,7 +311,7 @@ et le test de Kolmogorov-Smirnov des résidus contre $\mathcal N(0,1)$ une p-val
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\textwidth]{virus4_sim_ou.png}
+  \includegraphics[width=0.7\textwidth]{virus4_sim_ou.png}
   \caption{Trois trajectoires de l'Ornstein-Uhlenbeck au pas dilaté (en gris) et le virus reconstruit.}
   \label{fig:simou}
 \end{figure}
