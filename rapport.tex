@@ -272,4 +272,57 @@ Le test contre la Student donne une p-value de l'ordre de $2\cdot10^{-2}$, contr
 
 La p-value remonte de douze ordres de grandeur mais reste, à $\approx 0{,}02$, en dessous de $0{,}05$. \textbf{À priori, l'hypothèse d'innovations exactement de Student n'est pas retenue, même si cette loi décrit nettement mieux les innovations que la gaussienne.}
 
+\section*{Question 2 — Probabilités d'extinction}
+
+Une fois un modèle pour $X_t$ en main, nous nous sommes demandé avec quelle probabilité une population finit par s'éteindre, c'est-à-dire passe sous le seuil de densité $0{,}01$ au cours de l'intervalle $[0,\tau]$. Aucune de nos deux lois d'innovations n'ayant été formellement retenue, nous sommes partis du modèle qui capte le mieux la dynamique, soit l'Ornstein-Uhlenbeck dont le bruit est coloré par la mémoire $\phi$, et nous l'avons injecté dans le système $(V,P)$ pour estimer ces probabilités par Monte-Carlo.
+
+\subsection*{Méthode}
+
+Nous simulons $M$ trajectoires indépendantes du système complet. Le virus $X_t$ suit l'Ornstein-Uhlenbeck calibré plus haut dont le bruit obéit à la récurrence autorégressive~\eqref{eq:ar1}, tandis que les populations $(V,P)$ sont intégrées par un schéma d'Euler sur la même grille de temps que les données. Une trajectoire est comptée comme une extinction pour une population dès que sa densité passe sous $0{,}01$ en un point de $[0,\tau]$. Chaque trajectoire est alors une épreuve de Bernoulli si bien que le nombre d'extinctions parmi les $M$ tirages suit une loi binomiale $\mathcal B(M,p)$. La loi des grands nombres assure que la proportion observée estime $p$, et le théorème central limite donne un intervalle de confiance à $95\,\%$ de demi-largeur $1{,}96\sqrt{p(1-p)/M}$.
+
+\subsection*{Résultats}
+
+Avec $M = 10\,000$ trajectoires, les probabilités d'extinction estimées sont très contrastées d'une population à l'autre.
+
+\begin{center}
+  victimes : $p \approx 0{,}004$ \quad (IC$_{95}$ $[0{,}003\,;\,0{,}005]$) \\[0.3em]
+  prédateurs : $p \approx 0{,}44$ \quad (IC$_{95}$ $[0{,}43\,;\,0{,}45]$)
+\end{center}
+
+La figure~\ref{fig:conv} suit l'estimée cumulée et sa bande de confiance au fil des simulations, qui se resserre nettement et confirme la convergence. La figure~\ref{fig:traj} illustre le mécanisme sur quelques trajectoires simulées, où l'on voit les prédateurs frôler ou franchir le seuil bien plus souvent que les victimes.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\textwidth]{virus4_extinction_convergence.png}
+  \caption{Convergence des probabilités d'extinction estimées en fonction du nombre de simulations, avec leur bande de confiance à $95\,\%$.}
+  \label{fig:conv}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{virus4_extinction_trajectoires.png}
+  \caption{Quelques trajectoires simulées des victimes (gauche) et des prédateurs (droite) sous le bruit coloré, avec le seuil d'extinction $0{,}01$ en tirets.}
+  \label{fig:traj}
+\end{figure}
+
+Les prédateurs sont donc bien plus exposés que les victimes, ce qui rejoint le comportement déjà lu sur les données (figure~\ref{fig:series}) où ils s'effondrent durablement alors que les victimes continuent d'osciller. Une moyenne $m$ négative du virus abaisse l'équilibre des prédateurs via la relation~\eqref{eq:equilibre} et les rapproche du seuil, tandis que les victimes restent à des densités confortables.
+
+\subsection*{Robustesse au choix de la loi}
+
+Puisque ni la loi gaussienne ni la Student n'ont été retenues, il nous a semblé prudent de vérifier que ces probabilités ne dépendent pas du choix laissé en suspens. Nous avons rejoué les simulations à mémoire $\phi$ identique en ne changeant que la loi des innovations, gaussienne d'un côté et Student standardisée de l'autre.
+
+\begin{center}
+  bruit gaussien : victimes $0{,}004$, prédateurs $0{,}44$ \\[0.3em]
+  bruit Student : victimes $0{,}006$, prédateurs $0{,}40$
+\end{center}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.55\textwidth]{virus4_extinction_comparaison.png}
+  \caption{Probabilités d'extinction des deux populations selon que le bruit coloré porte des innovations gaussiennes ou de Student.}
+  \label{fig:comp}
+\end{figure}
+
+Les ordres de grandeur ne bougent pas d'une loi à l'autre. \textbf{La conclusion d'un risque fort pour les prédateurs et quasi nul pour les victimes est donc robuste au choix de la loi des innovations, pourtant non tranché.}
+
 \end{document}
