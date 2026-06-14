@@ -40,7 +40,9 @@ Lorsqu'aucune perturbation extérieure n'intervient, cette dynamique s'écrit co
 
 Un tel système admet des solutions périodiques si bien que les deux populations oscillent indéfiniment autour de leur point d'équilibre.
 
-\section*{Question 1 — Proposer et valider un modèle pour le virus}
+\section*{Partie 1}
+
+\subsection*{Question 1}
 
 Dans le jeu de données \texttt{virus4.csv}, les proies sont en plus frappées par un virus que l'on modélise par un processus stochastique $(X_t)_{t\in[0,\tau]}$. Le système devient alors
 
@@ -54,7 +56,7 @@ Le fichier fournit une observation discrétisée de cette dynamique dont la prem
 
 Avant de nous lancer dans la modélisation, il nous a semblé naturel de commencer par regarder les données pour voir à quoi ressemblent les deux populations au cours du temps et en quoi elles s'écartent du modèle déterministe. Nous espérions ainsi nous faire une première idée de ce que le virus fait réellement au système.
 
-\subsection*{Récupération du pas de temps}
+\subsubsection*{Récupération du pas de temps}
 
 Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas de temps de la discrétisation. Une idée a été d'exploiter le fait que l'équation des prédateurs ne contient aucun bruit puisque l'on a exactement $dP_t = P_t(-1 + V_t)\,dt$. En discrétisant, le pas de temps devrait alors vérifier
 
@@ -64,7 +66,7 @@ Le fichier contient $2000$ points mais nous ne connaissions pas a priori le pas 
 
 Nous avons donc moyenné cette quantité sur l'ensemble des points, en écartant ceux où le dénominateur $P_i(-1+V_i)$ est trop proche de zéro, soit que $V_i$ approche $1$, soit que $P_i$ approche $0$. Un seuil de $0{,}001$ sur $|P_i(-1+V_i)|$ ne retire qu'environ $4\,\%$ des points et donne $dt \approx 0{,}015$, soit une durée d'observation $\tau = 2000 \times 0{,}015 = 30$. Cela nous a permis de reconstruire l'axe des temps.
 
-\subsection*{Comparaison avec le modèle de Lotka-Volterra classique}
+\subsubsection*{Comparaison avec le modèle de Lotka-Volterra classique}
 
 Maintenant que l'axe des temps est reconstruit, nous avons voulu regarder les deux populations et, dans le même mouvement, mesurer l'effet du virus en les confrontant au modèle déterministe classique, c'est-à-dire au même système lorsque l'on retire le terme $X_t$. Une petite identification avec la forme générale~\eqref{eq:base} donne $a = \tfrac{2}{3}$, $b = \tfrac{4}{3}$, $c = 1$ et $d = 1$. Nous sommes partis des mêmes conditions initiales que les données, soit $V_0 = 1$ et $P_0 = 0{,}4$. La figure~\ref{fig:comparaison} superpose alors les trajectoires observées et celles de ce modèle classique, ce qui donne d'un coup une vue des données et leur écart au cas sans virus.
 
@@ -79,7 +81,7 @@ La comparaison nous a semblé parlante. Le modèle classique produit des oscilla
 
 Nous en avons retiré l'impression que le terme de virus $X_t$ ne se contente pas d'ajouter un petit bruit autour de la trajectoire classique mais qu'il modifie la dynamique d'ensemble et casse la périodicité. C'est sur ce comportement que nous avons choisi d'appuyer la modélisation de $(X_t)$ dans la suite.
 
-\subsection*{Reconstruction du virus $X_t$}
+\subsubsection*{Reconstruction du virus $X_t$}
 
 Ces premières observations restent qualitatives. Pour aller plus loin il nous a semblé qu'il fallait regarder directement le virus $X_t$, qui porte l'information utile sur la perturbation. Or l'équation des proies le fait apparaître explicitement, si bien qu'il suffit de la discrétiser pour l'en extraire. En remplaçant $dV_t$ par la différence $V_i - V_{i-1}$ et en évaluant le membre de droite au début du pas, on obtient
 
@@ -115,7 +117,7 @@ Toutefois, dans les processus stochastiques, les différences jouent un rôle ce
 
 Un test de Kolmogorov-Smirnov donne ici une p-value de l'ordre de $6\cdot10^{-14}$, largement inférieure à $0{,}05$. \textbf{À priori, l'hypothèse d'une distribution gaussienne des différences n'est pas retenue.}
 
-\subsection*{Un modèle du cours pour $X_t$ ?}
+\subsubsection*{Un modèle du cours pour $X_t$ ?}
 
 Une première idée naturelle est de passer en revue les modèles vus en cours pour juger de leur pertinence. Le tableau~\ref{tab:modeles} indique, pour chaque modèle écarté, la raison de l'écarter. Les modèles que rien ne permet d'écarter restent simplement en lice.
 
@@ -139,7 +141,7 @@ Une première idée naturelle est de passer en revue les modèles vus en cours p
   \label{tab:modeles}
 \end{table}
 
-\subsection*{Tester un modèle par ses résidus}
+\subsubsection*{Tester un modèle par ses résidus}
 
 Deux candidats passent ce premier filtre, le brownien avec dérive et l'Ornstein-Uhlenbeck. Sur une fenêtre aussi courte nous ne distinguons d'ailleurs pas à l'œil une dérive lente d'un retour à la moyenne. Ils s'écrivent respectivement
 
@@ -153,9 +155,15 @@ et se mettent tous deux sous la forme générale $dX_t = a(X_t)\,dt + \sigma\,dB
   \varepsilon_i = \frac{\Delta X_i - a(X_i)\,dt}{\sigma\sqrt{dt}} = \frac{\Delta B_i}{\sqrt{dt}}
 \end{equation}
 
-n'est qu'un incrément de mouvement brownien ramené à l'échelle $\sqrt{dt}$. Comme un tel incrément suit $\mathcal N(0,dt)$, le résidu doit suivre une loi normale centrée réduite $\mathcal N(0,1)$, et les résidus successifs doivent être indépendants. Un modèle pertinent devrait donc d'abord passer ce test des résidus, qui porte sur leur loi et sur leur indépendance.
+n'est qu'un incrément de mouvement brownien ramené à l'échelle $\sqrt{dt}$. Comme un tel incrément suit $\mathcal N(0,dt)$, le résidu doit suivre une loi normale centrée réduite $\mathcal N(0,1)$, et les résidus successifs doivent être indépendants. Cette indépendance se mesure par l'autocorrélation de rang $1$. Pour une suite $(y_i)$, c'est le coefficient de corrélation entre un terme et le suivant le long de la trajectoire,
 
-\subsection*{Test du brownien avec dérive}
+\begin{equation}\label{eq:acf1}
+  \rho_1 = \frac{\sum_i \left(y_i - \bar{y}\right)\left(y_{i+1} - \bar{y}\right)}{\sum_i \left(y_i - \bar{y}\right)^2},
+\end{equation}
+
+nulle quand les termes successifs sont indépendants. Un modèle pertinent devrait donc d'abord passer ce test des résidus, qui porte sur leur loi, comparée à $\mathcal N(0,1)$, et sur leur indépendance, mesurée par $\rho_1 \approx 0$.
+
+\subsubsection*{Test du brownien avec dérive}
 
 En discrétisant son équation, $\Delta X_i = \nu\,dt + \sigma\,\Delta B_i$. La moyenne des différences donne $\nu$, et comme l'incrément $\Delta B_i$ est d'écart-type $\sqrt{dt}$, l'écart-type des différences vaut $\sigma\sqrt{dt}$, ce qui donne $\sigma$ :
 
@@ -176,7 +184,7 @@ Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne une p-value de l'or
 
 \textbf{À priori, le brownien avec dérive n'est pas retenu.}
 
-\subsection*{Test de l'Ornstein-Uhlenbeck}
+\subsubsection*{Test de l'Ornstein-Uhlenbeck}
 
 En discrétisant son équation, on obtient
 
@@ -203,21 +211,29 @@ Le test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$ donne là aussi une p-val
 
 \textbf{À priori, l'Ornstein-Uhlenbeck n'est pas retenu.}
 
-\subsection*{Bilan}
+\subsubsection*{Bilan}
 
-Les deux candidats sont écartés pour la même raison. Tous deux reposent sur un bruit brownien, donc sur des résidus gaussiens et indépendants, alors que ceux du virus reconstruit présentent deux défauts bien distincts. Ils restent corrélés d'un pas au suivant, ce qui trahit une mémoire, et ils s'écartent nettement d'une loi normale par des queues plus lourdes. Plutôt que d'abandonner d'emblée le cadre des EDS, il nous a semblé plus instructif de corriger ces deux défauts l'un après l'autre.
+Les deux candidats sont écartés pour la même raison. Tous deux reposent sur un bruit brownien, donc sur des résidus gaussiens et indépendants, alors que ceux du virus reconstruit présentent deux défauts bien distincts. Ils restent corrélés d'un pas au suivant, ce qui trahit une mémoire, et ils s'écartent nettement d'une loi normale par des queues plus lourdes. Nous nous sommes dit que cela valait le coup d'essayer d'améliorer le modèle d'Ornstein-Uhlenbeck pour qu'il colle à ces observations, en corrigeant ces deux défauts l'un après l'autre.
 
-\subsection*{Un bruit coloré à mémoire}
+\subsubsection*{Un bruit coloré à mémoire}
 
-Le premier défaut à corriger est la mémoire. Une idée a été de renoncer au bruit blanc et de donner au bruit lui-même une corrélation d'un pas au suivant, c'est-à-dire de le décrire par un Ornstein-Uhlenbeck. En discrétisant un tel bruit $dE_t = -\theta E_t\,dt + s\,dB_t$, on obtient $E_i = (1 - \theta\,dt)\,E_{i-1} + s\,\Delta B_i$, soit une relation autorégressive d'ordre un sur les résidus
+Le premier défaut à corriger est la mémoire, c'est-à-dire l'autocorrélation $\rho_1 \approx 0{,}26$ des résidus qui indique leur non-indépendance. L'idée a été de garder l'Ornstein-Uhlenbeck pour la tendance de $X$ mais de remplacer son bruit blanc par un bruit qui garde lui-même une corrélation d'un pas au suivant. Le modèle de $X$ n'est alors plus piloté par le brownien $dB_t$ mais par un bruit coloré $dE_t$,
+
+\begin{equation}\label{eq:colore}
+  dX_t = \theta(\mu - X_t)\,dt + dE_t,
+  \qquad
+  dE_t = -\theta_E\,E_t\,dt + s\,dB_t,
+\end{equation}
+
+où le bruit $E_t$ est lui-même un Ornstein-Uhlenbeck, donc un processus corrélé. En discrétisant ce bruit, $E_i = (1 - \theta_E\,dt)\,E_{i-1} + s\,\Delta B_i$, ce qui se traduit sur les résidus $\varepsilon_i$ de l'Ornstein-Uhlenbeck de départ par une relation autorégressive d'ordre un
 
 \begin{equation}\label{eq:ar1}
   \varepsilon_i = \phi\,\varepsilon_{i-1} + \eta_i,
 \end{equation}
 
-où $\phi = 1 - \theta\,dt$ porte la mémoire tandis que les innovations $\eta_i = s\,\Delta B_i$ doivent retrouver le statut d'un bruit blanc gaussien. Tester ce modèle revient à régresser les résidus de l'Ornstein-Uhlenbeck sur leur passé pour estimer $\phi$, puis à vérifier que les innovations $\eta_i = \varepsilon_i - \phi\,\varepsilon_{i-1}$ sont indépendantes et gaussiennes.
+où $\phi = 1 - \theta_E\,dt$ porte la mémoire et où les innovations $\eta_i = s\,\Delta B_i$ doivent, elles, redevenir un bruit blanc gaussien.
 
-La régression donne directement la mémoire et nous standardisons ensuite les innovations pour les comparer à $\mathcal N(0,1)$.
+Le test change donc d'objet. Il ne s'agit plus de vérifier que les résidus $\varepsilon_i$ sont gaussiens et indépendants, mais que les innovations $\eta_i = \varepsilon_i - \phi\,\varepsilon_{i-1}$ le sont. Nous faisons une régression des résidus sur leur passé pour estimer $\phi$, puis nous testons l'indépendance des innovations par leur autocorrélation et leur gaussianité par un test de Kolmogorov-Smirnov. L'amplitude $s$ n'a pas à être connue, elle ne fixe que l'échelle des innovations, que l'on élimine en les standardisant avant de les comparer à $\mathcal N(0,1)$, alors que le test ne porte que sur leur forme et leur corrélation.
 
 \begin{center}
   $\phi \approx 0{,}26.$
@@ -234,11 +250,17 @@ La corrélation entre innovations consécutives tombe à $\approx 0{,}02$ alors 
 
 \textbf{À priori, l'indépendance est rétablie tandis que l'hypothèse d'innovations gaussiennes n'est pas retenue.}
 
-\subsection*{La loi des innovations}
+\subsubsection*{La loi des innovations}
 
-La mémoire étant captée par le terme autorégressif, il restait à corriger la loi des innovations. Leur histogramme reste plus piqué et à queues plus lourdes qu'une gaussienne, ce qui nous a conduits à tester une loi de Student. Une telle loi sort du cadre brownien strict puisque les incréments d'un mouvement brownien y sont gaussiens par construction, mais son nombre de degrés de liberté $\nu$ règle l'épaisseur des queues et permet de les ajuster.
+La mémoire étant captée par le terme autorégressif, il restait à corriger la loi des innovations. Leur histogramme reste plus piqué et à queues plus lourdes qu'une gaussienne, ce qui nous a conduits à tester une loi de Student. Le modèle reste le bruit coloré~\eqref{eq:colore}, mais nous ne supposons plus ses innovations gaussiennes, nous les prenons distribuées selon une loi de Student standardisée à $\nu$ degrés de liberté,
 
-Nous avons ajusté une loi de Student aux innovations par maximum de vraisemblance puis comparé cet ajustement à la gaussienne, dans les deux cas par un test de Kolmogorov-Smirnov.
+\begin{equation}\label{eq:student}
+  \eta_i \sim \mathrm{Student}(\nu),
+\end{equation}
+
+dont les queues plus épaisses laissent place à des valeurs extrêmes plus fréquentes. Une telle loi sort du cadre brownien strict puisque les incréments d'un mouvement brownien y sont gaussiens par construction, mais son nombre de degrés de liberté $\nu$ règle justement l'épaisseur des queues.
+
+Le degré de liberté est estimé par maximum de vraisemblance. Concrètement, on retient la valeur de $\nu$ qui maximise la vraisemblance des innovations, c'est-à-dire le produit $\prod_i f_\nu(\eta_i)$ de leurs densités sous la loi de Student, ou de façon équivalente la somme des log-densités $\sum_i \ln f_\nu(\eta_i)$, ce maximum étant trouvé numériquement. On juge ensuite l'ajustement par un test de Kolmogorov-Smirnov, comparé à celui de la gaussienne.
 
 \begin{center}
   $\nu \approx 2{,}4.$
@@ -255,57 +277,82 @@ Le test contre la Student donne une p-value de l'ordre de $2\cdot10^{-2}$, contr
 
 La p-value remonte de douze ordres de grandeur mais reste, à $\approx 0{,}02$, en dessous de $0{,}05$. \textbf{À priori, l'hypothèse d'innovations exactement de Student n'est pas retenue, même si cette loi décrit nettement mieux les innovations que la gaussienne.}
 
-\section*{Question 2 — Probabilités d'extinction}
+\subsubsection*{Bilan intermédiaire}
 
-Une fois un modèle pour $X_t$ en main, nous nous sommes demandé avec quelle probabilité une population finit par s'éteindre, c'est-à-dire passe sous le seuil de densité $0{,}01$ au cours de l'intervalle $[0,\tau]$. Aucune de nos deux lois d'innovations n'ayant été formellement retenue, nous sommes partis du modèle qui capte le mieux la dynamique, soit l'Ornstein-Uhlenbeck dont le bruit est coloré par la mémoire $\phi$, et nous l'avons injecté dans le système $(V,P)$ pour estimer ces probabilités par Monte-Carlo.
+Récapitulons. L'Ornstein-Uhlenbeck simple a été écarté par ses résidus, à la fois corrélés et à queues trop lourdes. Le bruit coloré a rétabli l'indépendance en captant la mémoire, mais sans corriger la loi. La loi de Student a, elle, nettement rapproché les innovations d'une vraie densité sans pour autant passer le test. Aucun de ces raffinements n'a donc suffi, et nous n'arrivons pas à décrire simplement les incréments du virus tels qu'on les observe.
 
-\subsection*{Méthode}
+\subsubsection*{Une échelle de temps différente pour $X$ ?}
 
-Nous simulons $M$ trajectoires indépendantes du système complet. Le virus $X_t$ suit l'Ornstein-Uhlenbeck calibré plus haut dont le bruit obéit à la récurrence autorégressive~\eqref{eq:ar1}, tandis que les populations $(V,P)$ sont intégrées par un schéma d'Euler sur la même grille de temps que les données. Une trajectoire est comptée comme une extinction pour une population dès que sa densité passe sous $0{,}01$ en un point de $[0,\tau]$. Chaque trajectoire est alors une épreuve de Bernoulli si bien que le nombre d'extinctions parmi les $M$ tirages suit une loi binomiale $\mathcal B(M,p)$. La loi des grands nombres assure que la proportion observée estime $p$, et le théorème central limite donne un intervalle de confiance à $95\,\%$ de demi-largeur $1{,}96\sqrt{p(1-p)/M}$.
+Il nous a semblé que le problème ne tenait peut-être pas au choix du modèle mais à l'échelle de temps à laquelle on regarde $X$. Les victimes et les prédateurs varient à l'échelle de l'unité de temps, et les données sont échantillonnées bien plus finement, environ tous les $0{,}015$ unités de temps. Mais le virus n'a aucune raison de fluctuer au même rythme que les populations, il pourrait très bien évoluer plus lentement, et c'est cette idée qui nous a conduits à le regarder sur un pas de temps dilaté. Plutôt que de raffiner encore le bruit, nous avons donc repris le modèle le plus simple qui décrive la descente du virus vers un plateau, l'Ornstein-Uhlenbeck classique piloté par un brownien,
 
-\subsection*{Résultats}
+\begin{equation}\label{eq:ou-grossier}
+  dX_t = \theta(\mu - X_t)\,dt + \sigma\,dB_t,
+\end{equation}
 
-Avec $M = 10\,000$ trajectoires, les probabilités d'extinction estimées sont très contrastées d'une population à l'autre.
+et nous l'avons confronté aux données non plus au pas natif mais sur un pas plus grand. Concrètement, on sous-échantillonne $X$ un point sur $k$, ce qui revient à l'observer au pas dilaté $dt_k = k\,dt$. À chaque pas, on estime $(\theta,\mu,\sigma)$ par une régression de $\Delta X_i$ sur $X_i$ comme au début, puis on teste ses \emph{résidus} standardisés $\varepsilon_i$ exactement comme dans la partie précédente, leur indépendance par l'autocorrélation de rang $1$~\eqref{eq:acf1} et leur normalité par un test de Kolmogorov-Smirnov contre $\mathcal N(0,1)$.
 
-\begin{center}
-  victimes : $p \approx 0{,}004$ \quad (IC$_{95}$ $[0{,}003\,;\,0{,}005]$) \\[0.3em]
-  prédateurs : $p \approx 0{,}44$ \quad (IC$_{95}$ $[0{,}43\,;\,0{,}45]$)
-\end{center}
-
-La figure~\ref{fig:conv} suit l'estimée cumulée et sa bande de confiance au fil des simulations, qui se resserre nettement et confirme la convergence. La figure~\ref{fig:traj} illustre le mécanisme sur quelques trajectoires simulées, où l'on voit les prédateurs frôler ou franchir le seuil bien plus souvent que les victimes.
+La figure~\ref{fig:coarse} suit ces deux quantités du pas natif jusqu'à quelques pas plus grands. Au pas natif les résidus de l'Ornstein-Uhlenbeck sont corrélés ($\rho_1 \approx 0{,}26$) et nettement non gaussiens (p-value $\approx 3\cdot10^{-14}$), ce sont les deux défauts déjà rencontrés. En dilatant le pas, les deux s'amendent ensemble.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\textwidth]{virus4_extinction_convergence.png}
-  \caption{Convergence des probabilités d'extinction estimées en fonction du nombre de simulations, avec leur bande de confiance à $95\,\%$.}
-  \label{fig:conv}
+  \includegraphics[width=0.8\textwidth]{virus4_pas_dilate.png}
+  \caption{Pour l'Ornstein-Uhlenbeck ajusté à chaque pas $dt_k = k\,dt$, autocorrélation de rang $1$ de ses résidus (rouge) et p-value du test de Kolmogorov-Smirnov de leur normalité (bleu). Les deux défauts du pas natif s'effacent au-delà du pas double, le pas quadruple ($dt_k \approx 0{,}060$) donnant les meilleurs résidus.}
+  \label{fig:coarse}
 \end{figure}
+
+Le choix du pas résulte d'un compromis. Au pas double ($dt_k \approx 0{,}03$, un point sur deux) la p-value des résidus atteint à peine $0{,}05$ et leur autocorrélation reste de $\approx 0{,}06$, donc une mémoire résiduelle subsiste. Le pas triple ($dt_k \approx 0{,}045$) corrige déjà les deux défauts, mais c'est au pas quadruple ($dt_k \approx 0{,}060$, un point sur quatre) que les résidus sont les mieux comportés, avec une autocorrélation quasi nulle ($\approx 0{,}01$) et la p-value la plus élevée ($\approx 0{,}88$). Aller au-delà ne fait que jeter des points et rebruite les estimations, la p-value retombant dès le pas suivant. Nous retenons donc $dt_k \approx 0{,}060$. Pour fixer les idées, si l'on disait que les populations varient tous les jours, alors le virus, lui, n'évoluerait qu'environ tous les quatre jours. La figure~\ref{fig:residus} compare la distribution des résidus à $\mathcal N(0,1)$, au pas natif puis à ce pas.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{virus4_residus_dilate.png}
+  \caption{Résidus standardisés de l'Ornstein-Uhlenbeck comparés à $\mathcal N(0,1)$, au pas natif (gauche, pic marqué et queues lourdes) et au pas dilaté (droite, accord net).}
+  \label{fig:residus}
+\end{figure}
+
+À ce pas, l'estimation donne
+
+\begin{center}
+  $\theta \approx 0{,}08, \qquad \mu \approx -0{,}63, \qquad \sigma \approx 0{,}06,$
+\end{center}
+
+et le test de Kolmogorov-Smirnov des résidus standardisés contre $\mathcal N(0,1)$ donne une p-value $\approx 0{,}88$, leur autocorrélation valant $\approx 0{,}01$. La figure~\ref{fig:simou} compare quelques trajectoires simulées de ce modèle au virus reconstruit.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{virus4_sim_ou.png}
+  \caption{Trois trajectoires de l'Ornstein-Uhlenbeck au pas dilaté (en gris) et le virus reconstruit.}
+  \label{fig:simou}
+\end{figure}
+
+\textbf{À priori, l'Ornstein-Uhlenbeck observé à ce pas n'est pas écarté par le test.} Faute de pouvoir le rejeter, c'est le modèle que nous retenons pour la suite, sans pour autant prétendre qu'il soit le vrai modèle du virus, une p-value élevée ne prouvant jamais une hypothèse. La piste garde d'ailleurs ses limites, que nous assumons. L'écart-type stationnaire associé $\sigma/\sqrt{2\theta} \approx 0{,}15$ dépasse l'agitation $\approx 0{,}055$ observée sur le plateau, et la décroissance exponentielle du modèle n'épouse que grossièrement la forme en S de la descente initiale. C'est néanmoins la description la plus cohérente que nous ayons trouvée dans le cadre du cours.
+
+\subsection*{Question 2}
+
+Disposant d'un modèle non rejeté pour $X_t$, on s'intéresse à l'extinction d'une population, c'est-à-dire au fait que sa densité passe sous le seuil $0{,}01$ au cours de l'intervalle $[0,\tau]$. Le projet demande d'en proposer une loi, et pas seulement une valeur.
+
+Pour une population donnée, les victimes ou les prédateurs, introduisons la variable aléatoire
+
+\begin{equation}\label{eq:indic}
+  Y = \mathbf{1}_{\{\,\text{la densité passe sous } 0{,}01 \text{ sur } [0,\tau]\,\}},
+\end{equation}
+
+qui vaut $1$ si la population s'éteint et $0$ sinon. C'est l'indicatrice de l'événement d'extinction, donc $Y$ suit une loi de Bernoulli de paramètre $p$, la probabilité que cet événement se produise. Proposer la loi de l'extinction revient ainsi à identifier ce $p$.
+
+Pour l'estimer, on simule un grand nombre de trajectoires du système complet et on relève la fréquence des extinctions. Le virus $X_t$ y suit l'Ornstein-Uhlenbeck retenu, dont le bruit est cette fois un vrai bruit blanc gaussien, et les populations $(V,P)$ sont intégrées par un schéma d'Euler sur la grille de temps des données. Avec $M = 10\,000$ trajectoires, on obtient
+
+\begin{center}
+  victimes : $p \approx 0{,}001$ \qquad prédateurs : $p \approx 0{,}39$.
+\end{center}
+
+Autrement dit l'extinction des victimes suit une loi de Bernoulli $\mathcal B(0{,}001)$ et celle des prédateurs une loi de Bernoulli $\mathcal B(0{,}39)$. La figure~\ref{fig:traj} illustre le mécanisme sur quelques trajectoires simulées, où l'on voit les prédateurs frôler ou franchir le seuil bien plus souvent que les victimes.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{virus4_extinction_trajectoires.png}
-  \caption{Quelques trajectoires simulées des victimes (gauche) et des prédateurs (droite) sous le bruit coloré, avec le seuil d'extinction $0{,}01$ en tirets.}
+  \caption{Quelques trajectoires simulées des victimes (gauche) et des prédateurs (droite), le virus suivant l'Ornstein-Uhlenbeck retenu, avec le seuil d'extinction $0{,}01$ en tirets.}
   \label{fig:traj}
 \end{figure}
 
 Les prédateurs sont donc bien plus exposés que les victimes, ce qui rejoint le comportement déjà lu sur les données (figure~\ref{fig:comparaison}) où ils s'effondrent durablement alors que les victimes continuent d'osciller. Une moyenne négative du virus abaisse l'équilibre des prédateurs et les rapproche du seuil, tandis que les victimes restent à des densités confortables.
-
-\subsection*{Robustesse au choix de la loi}
-
-Puisque ni la loi gaussienne ni la Student n'ont été retenues, il nous a semblé prudent de vérifier que ces probabilités ne dépendent pas du choix laissé en suspens. Nous avons rejoué les simulations à mémoire $\phi$ identique en ne changeant que la loi des innovations, gaussienne d'un côté et Student standardisée de l'autre.
-
-\begin{center}
-  bruit gaussien : victimes $0{,}004$, prédateurs $0{,}44$ \\[0.3em]
-  bruit Student : victimes $0{,}006$, prédateurs $0{,}40$
-\end{center}
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.55\textwidth]{virus4_extinction_comparaison.png}
-  \caption{Probabilités d'extinction des deux populations selon que le bruit coloré porte des innovations gaussiennes ou de Student.}
-  \label{fig:comp}
-\end{figure}
-
-Les ordres de grandeur ne bougent pas d'une loi à l'autre. \textbf{La conclusion d'un risque fort pour les prédateurs et quasi nul pour les victimes est donc robuste au choix de la loi des innovations, pourtant non tranché.}
 
 \end{document}
