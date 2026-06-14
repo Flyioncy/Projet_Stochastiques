@@ -167,8 +167,8 @@ Le style s'inspire directement des corrections du cours. Les conventions à resp
 - Les bibliothèques principales sont `numpy`, `matplotlib.pyplot` et `scipy.stats`, importées avec les alias standards `np`, `plt`, `scs`.
 - Les variables sont nommées de façon explicite et cohérente avec les notations mathématiques du sujet (`V`, `P`, `Xt`, `tau`, etc.).
 - Chaque cellule de code fait une seule chose. Les grandes simulations sont découpées en cellules distinctes.
-- Les commentaires dans le code sont en français, concis, et expliquent le *pourquoi* plutôt que le *quoi*.
-- Pour les simulations, on utilise `scipy.stats` (`.rvs`, `.cdf`, `.ppf`, `.pdf`, `.ks_1samp`, etc.) plutôt que `numpy.random` pour rester cohérent avec le cours.
+- Les commentaires dans le code sont en français, concis et sans commentaire superflu, commencent par une majuscule et sont accentués, et expliquent le *pourquoi* plutôt que le *quoi*.
+- Pour les simulations, on tire l'aléa avec `scipy.stats` (`.rvs`, `.cdf`, `.ppf`, `.pdf`, `.ks_1samp`, etc.) et non avec `numpy.random` ; une EDS se simule par un schéma d'Euler dont les incréments browniens sont des `scs.norm(scale=np.sqrt(dt)).rvs(...)`.
 - Les graphiques sont soignés : axes labelisés, titre si nécessaire, `density=True` pour les histogrammes comparés à une densité théorique.
 
 Exemple de bloc typique tiré des corrections :
